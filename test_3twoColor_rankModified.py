@@ -62,7 +62,7 @@ for idx1,b1 in enumerate(rank1):  # 1014 *12 = 12168
                         board = AsBdCh, AdBsCh
 
                         '''
-                        # print(idx1,idx2,idx3)
+                        print(idx1,idx2,idx3)
                     if idx1==idx3<idx2:   #78
                         # pass  #156
                         rb[(b1+b2+b3)]=12*2     # C2,4*C1,2 = 12, 2 (1=3<2, 1<2=3)
