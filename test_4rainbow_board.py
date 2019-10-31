@@ -124,7 +124,7 @@ def try_my_operation(group):
             fc = groups[group]
             me = array[:2]
             op = array[2:4]
-            board = [array[4], array[5], array[6], '__', '__']
+            board = [array[4], array[5], array[6], array[7], '__']
             # print(group)
             # print(me , op)
             # print(board)
@@ -190,8 +190,14 @@ twoColor  78comb vs 78 comb       785.69s
 oneColor  78comb vs 78 comb       221.97s
 
 turn      Range vs Range          Time
-rainbow   78comb vs 78 comb       1371.85s
-threeColor78comb vs 78 comb       1314.13s
-twoColor  78comb vs 78 comb       38min=2280s
-oneColor  78comb vs 78 comb       8min=480s
+rainbow   78comb vs 78 comb       10min
+threeColor78comb vs 78 comb
+twoColor  78comb vs 78 comb
+oneColor  78comb vs 78 comb       
+
+river      Range vs Range      rb   Time
+rainbow   78comb vs 78 comb    2366   2hour+
+threeColor78comb vs 78 comb    11882
+twoColor  78comb vs 78 comb    7007
+oneColor  78comb vs 78 comb    1287  4min
 '''

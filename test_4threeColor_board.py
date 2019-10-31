@@ -125,7 +125,7 @@ def try_my_operation(group):
             fc = groups[group]
             me = array[:2]
             op = array[2:4]
-            board = [array[4], array[5], array[6], '__', '__']
+            board = [array[4], array[5], array[6], array[7], '__']
             # print(group)
             # print(me , op)
             # print(board)

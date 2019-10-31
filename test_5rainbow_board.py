@@ -41,10 +41,10 @@ rank4 = ["2s","3s","4s","5s","6s","7s","8s","9s","Ts","Js","Qs","Ks","As"]
 # hr = eval7.HandRange("AsKs")
 # hand vs hand 0.08s  total game: 1979010
 # range vs range 78*6 15s total game: 585293940  78*78  0:03:39.749825
-hr = hr1
-op_hr = hr1
+hr =  hr1
+op_hr =  hr1
 scoop=total=tie=0
-
+fre=0
 pairs = []
 for i in range(len(hr)):
     for j in range(len(op_hr)):
@@ -54,42 +54,53 @@ for i in range(len(hr)):
         fourth = str(op_hr.hands[j][0][1])
         pairs.append((first+second+third+fourth))
 
-rb={}   ## River rainbow  # 685,464 => 2366
+rb={}   ## River rainbow  # 685,464=4(colorShape)*171,366  Iteration: 171366=> 2366
 for idx1,b1 in enumerate(rank1):
     for idx2, b2 in enumerate(rank2):
         for idx3, b3 in enumerate(rank3):
             for idx4, b4 in enumerate(rank4):
                 for idx5, b5 in enumerate(rank4):
-
-                    if idx1<idx2<idx3<idx4<idx5:  # 1287
-                        # pass
-                        rb[(b1+b2+b3+b4+b5)]=240
+                    if idx4<idx5:
+                        # print(idx1,idx2,idx3,idx4,idx5)
+                        # rb[(b1+b2+b3+b4+b5)]=1
                         '''
-                        Range vs Range
-                        [QQ, AQs,AQo]
-                        board = AsBdCh, AdBsCh
-
+                        all     set&two noPair oneP fulH&quads set
+                        (171366, 16302, 77220, 77220, 624, 0)
                         '''
-                    if idx1==idx2<idx3<idx4<idx5:  # 715
-                        # pass
-                        rb[(b1+b2+b3+b4+b5)]=432
-                    if idx1==idx2==idx3<idx4<idx5:  #286  orderShape = 1+3+1/2+2+1
-                        # pass
-                        rb[(b1+b2+b3+b4+b5)]=228
-                    if idx1==idx2==idx3==idx4<idx5:  #78   orderShape = 4+1/2+3
-                        # pass
-                        rb[(b1+b2+b3+b4+b5)]=32
-                    # if idx1==idx2==idx3==idx4==idx5:  #
-                    #     # pass
-                    #     rb[(b1+b2+b3+b4+b5)]=0
+                        ##no pair
+                        if idx1<idx2<idx3<idx4<idx5:  # 1287
+                            # pass
+                            rb[(b1+b2+b3+b4+b5)]=4*60 # 6*C2,5
+                            fre+=1
+                            '''
+                            Range vs Range
+                            [QQ, AQs,AQo]
+                            board = AsBdCh, AdBsCh
+
+                            '''
+                        ## One pair: 77220
+                        if idx1==idx2<idx3<idx4<idx5:  # 715
+                            # pass
+                            rb[(b1+b2+b3+b4+b5)]=4*108
+                        ##Two pair & Set: 16302
+                        if idx1==idx2==idx3<idx4<idx5:  #286
+                            # pass
+                            rb[(b1+b2+b3+b4+b5)]=4*57
+                        #Quads & fullhouse: 624
+                        if idx1==idx2==idx3==idx4<idx5:  #78
+                        #     # pass
+                            # print(idx1,idx2,idx3,idx4,idx5)
+                            rb[(b1+b2+b3+b4+b5)]=4*8
 
 
+#
 # pprint(rb)
 # print(len(rb))
-
-for i in rb.values():
-    total +=i
-print(total) # 685,464
+# print("fre: %d" % fre)
+#
+# for i in rb.values():
+#     total +=i
+# print(total) # 685,464
 
 groups = {}
 pprint(len(rb))
@@ -118,7 +129,7 @@ def try_my_operation(group):
             fc = groups[group]
             me = array[:2]
             op = array[2:4]
-            board = [array[4], array[5], array[6], '__', '__']
+            board = [array[4], array[5], array[6], array[7], array[8]]
             # print(group)
             # print(me , op)
             # print(board)
@@ -184,14 +195,14 @@ twoColor  78comb vs 78 comb       785.69s
 oneColor  78comb vs 78 comb       221.97s
 
 turn      Range vs Range          Time
-rainbow   78comb vs 78 comb       1371.85s
+rainbow   78comb vs 78 comb       10min
 threeColor78comb vs 78 comb       1314.13s
 twoColor  78comb vs 78 comb       38min=2280s
 oneColor  78comb vs 78 comb       8min=480s
 
 river      Range vs Range         Time
-rainbow   78comb vs 78 comb       27min
-threeColor78comb vs 78 comb       
+rainbow   78comb vs 78 comb       2hour+
+threeColor78comb vs 78 comb
 twoColor  78comb vs 78 comb
 oneColor  78comb vs 78 comb
 '''

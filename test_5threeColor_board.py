@@ -216,77 +216,77 @@ for idx1,b1 in enumerate(rank1):  #949,104  (2,2,1,0) = 12*79,092  iteration= 60
 
 
 # pprint(rb)
-print(len(rb))
+# print(len(rb))
+#
+# for i in rb.values():
+#     total +=i
+# print(total) # 1,529,112  = 9,767,472 (3,1,1,0) + 949104 (2,2,1,0)
 
-for i in rb.values():
-    total +=i
-print(total) # 1,529,112  = 9,767,472 (3,1,1,0) + 949104 (2,2,1,0)
+groups = {}
+pprint(len(rb))
+for pair in pairs:
+    for bd in rb:
+        groups[(pair+bd)]=rb[bd]
+# pprint(groups)
+# print(len(groups))
+# print(len(pairs),len(rb))
+ # 'TsThTsThThTdTc': 1}
 
-# groups = {}
-# pprint(len(rb))
-# for pair in pairs:
-#     for bd in rb:
-#         groups[(pair+bd)]=rb[bd]
-# # pprint(groups)
-# # print(len(groups))
-# # print(len(pairs),len(rb))
-#  # 'TsThTsThThTdTc': 1}
-#
-#
-#
-# #XXX rainbow ascend repeat
-# # Multi-Processing
-# def try_my_operation(group):
-#         try:
-#             array = [group[i:i+2] for i in range(0, len(group), 2)]
-#             '''
-#             test for cards duplication
-#             '''
-#             if len(array) != len(set(array)) :
-#                 # f.close()
-#                 return None
-#             # print(array)
-#             fc = groups[group]
-#             me = array[:2]
-#             op = array[2:4]
-#             board = [array[4], array[5], array[6], '__', '__']
-#             # print(group)
-#             # print(me , op)
-#             # print(board)
-#
-#             # f=open("guru100.txt","a+")
-#             result = pokereval.poker_eval(game='holdem', pockets=[me, op], board=board)
-#             #pprint(result['eval'][0]['scoop'])
-#             #pprint(result['info'][0])
-#             scoop = result['eval'][0]['scoop']*fc
-#             tie = result['eval'][0]['tiehi']*fc
-#             total = result['info'][0]*fc
-#             # f.write("%s %s %s %s\n " %  (group,scoop,tie,total))
-#             # f.close()
-#             return (scoop,tie,total)
-#         except Exception as e:
-#             print('Caught exception in worker thread %s' % group)
-#
-#             # This prints the type, value, and stack trace of the
-#             # current exception being handled.
-#             traceback.print_exc()
-#             print()
-#
-#             raise e
-#
-# # futures = [executor.submit(try_my_operation, group) for group in groups]
-# # concurrent.futures.wait(futures)
-#
-# for group in tqdm(groups):
-#     if try_my_operation(group) != None:
-#         scoop1=tie1=total1 =0
-#         scoop1, tie1, total1 = try_my_operation(group)
-#         scoop+=scoop1; tie+=tie1; total+=total1
-#         # print(group,scoop,tie,total)
-#
-# print("Equity: %18.9f " % ((scoop+tie*1.0/2)*1.0/total))
-# print("total game: %s" % total)
-# # print("iteration: %s" % fre)  # 2197 => 546
+
+
+#XXX rainbow ascend repeat
+# Multi-Processing
+def try_my_operation(group):
+        try:
+            array = [group[i:i+2] for i in range(0, len(group), 2)]
+            '''
+            test for cards duplication
+            '''
+            if len(array) != len(set(array)) :
+                # f.close()
+                return None
+            # print(array)
+            fc = groups[group]
+            me = array[:2]
+            op = array[2:4]
+            board = [array[4], array[5], array[6], array[7], array[8]]
+            # print(group)
+            # print(me , op)
+            # print(board)
+
+            # f=open("guru100.txt","a+")
+            result = pokereval.poker_eval(game='holdem', pockets=[me, op], board=board)
+            #pprint(result['eval'][0]['scoop'])
+            #pprint(result['info'][0])
+            scoop = result['eval'][0]['scoop']*fc
+            tie = result['eval'][0]['tiehi']*fc
+            total = result['info'][0]*fc
+            # f.write("%s %s %s %s\n " %  (group,scoop,tie,total))
+            # f.close()
+            return (scoop,tie,total)
+        except Exception as e:
+            print('Caught exception in worker thread %s' % group)
+
+            # This prints the type, value, and stack trace of the
+            # current exception being handled.
+            traceback.print_exc()
+            print()
+
+            raise e
+
+# futures = [executor.submit(try_my_operation, group) for group in groups]
+# concurrent.futures.wait(futures)
+
+for group in tqdm(groups):
+    if try_my_operation(group) != None:
+        scoop1=tie1=total1 =0
+        scoop1, tie1, total1 = try_my_operation(group)
+        scoop+=scoop1; tie+=tie1; total+=total1
+        # print(group,scoop,tie,total)
+
+print("Equity: %18.9f " % ((scoop+tie*1.0/2)*1.0/total))
+print("total game: %s" % total)
+# print("iteration: %s" % fre)  # 2197 => 546
 
 '''
  full flop: 52*51*50/6 = 22,100

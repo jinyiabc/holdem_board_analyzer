@@ -63,25 +63,26 @@ for hr in handRanges:
             for idx3, b3 in enumerate(rank3):
                 for idx4, b4 in enumerate(rank4):
                     for idx5, b5 in enumerate(rank4):
+                        if idx4<idx5:
 
-                        if idx1<idx2<idx3<idx4<idx5:  # 1287
-                            # pass
-                            rb[(b1+b2+b3+b4+b5)]=240
-                            '''
-                            Range vs Range
-                            [QQ, AQs,AQo]
-                            board = AsBdCh, AdBsCh
+                            if idx1<idx2<idx3<idx4<idx5:  # 1287
+                                # pass
+                                rb[(b1+b2+b3+b4+b5)]=240
+                                '''
+                                Range vs Range
+                                [QQ, AQs,AQo]
+                                board = AsBdCh, AdBsCh
 
-                            '''
-                        if idx1==idx2<idx3<idx4<idx5:  # 715
-                            # pass
-                            rb[(b1+b2+b3+b4+b5)]=432
-                        if idx1==idx2==idx3<idx4<idx5:  #286  orderShape = 1+3+1/2+2+1
-                            # pass
-                            rb[(b1+b2+b3+b4+b5)]=228
-                        if idx1==idx2==idx3==idx4<idx5:  #78   orderShape = 4+1/2+3
-                            # pass
-                            rb[(b1+b2+b3+b4+b5)]=32
+                                '''
+                            if idx1==idx2<idx3<idx4<idx5:  # 715
+                                # pass
+                                rb[(b1+b2+b3+b4+b5)]=432
+                            if idx1==idx2==idx3<idx4<idx5:  #286  orderShape = 1+3+1/2+2+1
+                                # pass
+                                rb[(b1+b2+b3+b4+b5)]=228
+                            if idx1==idx2==idx3==idx4<idx5:  #78   orderShape = 4+1/2+3
+                                # pass
+                                rb[(b1+b2+b3+b4+b5)]=32
                         # if idx1==idx2==idx3==idx4==idx5:  #
                         #     # pass
                         #     rb[(b1+b2+b3+b4+b5)]=0
@@ -219,4 +220,10 @@ rainbow   78comb vs 78 comb       1371.85s
 threeColor78comb vs 78 comb       1314.13s
 twoColor  78comb vs 78 comb       38min*60=2280s
 oneColor  78comb vs 78 comb
+
+full river: 52*51*50*49*48/120 = 2,598,960
+rainbow:    (4 shape)*(13**3)*C2,13 = 685,464    26.4%
+threeColor: C3,4*[C2,13*C2,13*C1,13*(3 shape) + C3,13*C1,13*C1,13*(3 shape)] = 509,704*3 = 1,529,112  58.8%
+twoColor:   C2,4*[C1,13*C4,13*(2 shape) + C2,13*C3,13*(2 shape)]= 189,613*2 = 379,236  14.6%
+oneColor:   C1,4*C5,13 = 1287*4 = 5148  0.2%
 '''

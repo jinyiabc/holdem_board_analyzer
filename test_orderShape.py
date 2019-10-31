@@ -216,28 +216,70 @@ scoop=total=tie=fre=fre1=fre2=fre3=fre4=fre5=fre6=fre7=fre8=0
 #                             # print(idx1,idx2,idx3,idx4,idx5)
 #                             # print(b1,b2,b3,b4,b5)
 
-rb={}   ## River One color
-for idx1,b1 in enumerate(rank1):   # (5,0,0,0) = 12*1287(C5,13)  iteration=
-    for idx2, b2 in enumerate(rank1):
-        for idx3, b3 in enumerate(rank1):
-            for idx4, b4 in enumerate(rank1):
-                for idx5, b5 in enumerate(rank1):
+# rb={}   ## River One color
+# for idx1,b1 in enumerate(rank1):   # (5,0,0,0) = 12*1287(C5,13)  iteration=
+#     for idx2, b2 in enumerate(rank1):
+#         for idx3, b3 in enumerate(rank1):
+#             for idx4, b4 in enumerate(rank1):
+#                 for idx5, b5 in enumerate(rank1):
+#
+#                     if idx1<idx2<idx3<idx4<idx5:
+#                         '''
+#                         total in (4,1,0,0) =9295
+#                         '''
+#                         fre+=1
+#
+#                         '''
+#                         no pair in (4,1,0,0) = 6435
+#                         '''
+#                         fre5+=1
+#                         # print(idx1,idx2,idx3,idx4,idx5)
+#                         # print(b1,b2,b3,b4,b5)
 
-                    if idx1<idx2<idx3<idx4<idx5:
+rb={}   ## River One color
+for idx1,b1 in enumerate(rank1):   # (1,1,1,2) = 12*1287(C5,13)  iteration=
+    for idx2, b2 in enumerate(rank2):
+        for idx3, b3 in enumerate(rank3):
+            for idx4, b4 in enumerate(rank4):
+                for idx5, b5 in enumerate(rank4):
+
+                    if idx4<idx5:
                         '''
-                        total in (4,1,0,0) =9295
+                        total in (1,1,1,2) =171366
                         '''
                         fre+=1
+                        array1 = set([idx1,idx2,idx3,idx4,idx5])
+                        '''
+                        two pairs & set in (1,1,1,2) =16302
+                        '''
+                        if len(array1) == 3:
+                            fre4+=1
+                            print(idx1,idx2,idx3,idx4,idx5)
 
                         '''
-                        no pair in (4,1,0,0) = 6435
+                        no pair in (1,1,1,2) = 77220
                         '''
-                        fre5+=1
-                        # print(idx1,idx2,idx3,idx4,idx5)
-                        # print(b1,b2,b3,b4,b5)
+                        if len(array1) == 5:
+                        # if len(set([idx1,idx2,idx3,idx4,idx5])) == 5:
+                            fre5+=1
+                            # print(idx1,idx2,idx3,idx4,idx5)
+                            # print(b1,b2,b3,b4,b5)
+                        '''
+                        one pair in (1,1,1,2) = 77220
+                        '''
+                        if len(array1) == 4:
+                            fre6+=1
+                            # print(idx1,idx2,idx3,idx4,idx5)
+                        '''
+                        full house & quads in (1,1,1,2) =16302
+                        '''
+                        if len(array1) == 2:
+                            fre7+=1
+                            print(idx1,idx2,idx3,idx4,idx5)
 
 
-print(fre, fre4, fre5, fre6, fre7, fre8)
+print("all     set&two noPair oneP fulH&quads set")
+print(fre, fre4, fre5, fre6, fre7,     fre8)
 # pprint(rb)
 # print(len(rb))
 #
@@ -246,8 +288,8 @@ print(fre, fre4, fre5, fre6, fre7, fre8)
 # print(total) # 1,529,112
 
 '''
-all     set&two noPair oneP fulHouse
-(79092, 6006, 38610, 34320, 156)
+all     set&two noPair oneP fulHouse set
+(79092, 6006, 38610, 34320, 156, 0)
 
 (3,2,0,0)
 all     set&two noPair oneP fulHouse
@@ -257,7 +299,8 @@ all     set&two noPair oneP fulHouse
 (9295, 0, 6435, 2860, 0, 0)
 (5,0,0,0)
 (1287, 0, 1287, 0, 0, 0)
-
+all     set&two noPair oneP fulH&quads set
+(171366, 16302, 77220, 77220, 16302, 0)
 
 
 

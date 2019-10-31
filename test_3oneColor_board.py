@@ -52,23 +52,24 @@ for i in range(len(hr)):
         third = str(op_hr.hands[j][0][0])
         fourth = str(op_hr.hands[j][0][1])
         pairs.append((first+second+third+fourth))
-
+fre=0
 rb={}   ## oneColor
 for idx1,b1 in enumerate(rank1):  # 286*4 = 1144
     for idx2, b2 in enumerate(rank1):
         for idx3, b3 in enumerate(rank1):
             if idx1<idx2<idx3:
-                # pass  # 858
-                rb[(b1+b2+b3)]=4
+                # fre+=1
+                # pass  # 286(C3,13)
+                rb[(b1+b2+b3)]=4   # C1,4 for color
                 '''
                 Range vs Range
                 [QQ, AQs,AQo]
                 board = AsBdCh, AdBsCh
 
                 '''
-
+# print(fre)
 # pprint(rb)
-# print(len(rb))
+print("the number of board: %d" % len(rb))
 
 groups = {}
 pprint(len(rb))
@@ -145,8 +146,9 @@ print("total game: %s" % total)              # 990* 455 = 450450  990*2041 = 2,0
 '''
 
 '''
-          Range vs Range          Time
-rainbow   78comb vs 78 comb       355.97s
-twoColor  78comb vs 78 comb       785.69s
-oneColor  78comb vs 78 comb       221.97s
+flop      Range vs Range       rb   Time
+rainbow   78comb vs 78 comb    377   355.97s/ 407.04s
+twoColor  78comb vs 78 comb    364   785.69s/456.30s
+oneColor  78comb vs 78 comb    286   221.97s/384.57s
+
 '''

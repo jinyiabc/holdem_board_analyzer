@@ -52,32 +52,50 @@ for i in range(len(hr)):
         third = str(op_hr.hands[j][0][0])
         fourth = str(op_hr.hands[j][0][1])
         pairs.append((first+second+third+fourth))
-
+fre=fre1=fre2=sub=0
 rb={}   ## flop rainbow
-for idx1,b1 in enumerate(rank1):  # (2197->455)
+for idx1,b1 in enumerate(rank1):  # (2197->377)
     for idx2, b2 in enumerate(rank2):
         for idx3, b3 in enumerate(rank3):
-            if idx1<idx2<idx3:
+            '''
+            (1716, 468, 13)
+            all    onePair set
+            '''
+            if idx1<idx2<idx3:  #286
                 # pass
-                rb[(b1+b2+b3)]=6
+                # fre+=1
+                rb[(b1+b2+b3)]=4*6
                 '''
                 Range vs Range
                 [QQ, AQs,AQo]
                 board = AsBdCh, AdBsCh
 
                 '''
-            if idx1==idx2 and idx2<idx3:
+            if idx1==idx2 and idx2<idx3: #78
                 # pass
-                rb[(b1+b2+b3)]=3
-            if idx1<idx2 and idx2==idx3:
+                # fre+=1
+                rb[(b1+b2+b3)]=4*6
+
+            if idx1==idx2==idx3: #13
                 # pass
-                rb[(b1+b2+b3)]=3
-            if idx1==idx2==idx3:
-                # pass
-                rb[(b1+b2+b3)]=1
+                rb[(b1+b2+b3)]=4*1
+
+            # array = set([idx1,idx2,idx3])
+            # if len(array) == 3:
+            #     fre +=1
+            # elif len(array) ==2:
+            #     fre1+=1
+            # else:
+            #     fre2+=1
+
+# print(fre,fre1,fre2)
+# print("the number of board: %d" % len(rb))
+# for i in rb.values():
+#     sub +=i
+# print(sub)
 
 groups = {}
-pprint(len(rb))
+print("the number of board: %d" % len(rb))
 for pair in pairs:
     for bd in rb:
         groups[(pair+bd)]=rb[bd]
@@ -142,23 +160,24 @@ print("Equity: %18.9f " % ((scoop+tie*1.0/2)*1.0/total))
 print("total game: %s" % total)              # 990* 455 = 450450  990*2041 = 2,020,590 (13*13*13=2197, A<=B<=C A=C<B(78) and A=C>B (78)excluded)
 # print("iteration: %s" % fre)  # 2197 => 546
 
-'''
- full flop: 52*51*50/6 = 22,100
- rainbow : 2197(given three color) * 4 (C1,4) = 8788  39%
- TwoColor: 2*(13*12/2)*13* 6 (C2,4) = 12168           55%
- OneColor: 13*12*11/6 * 4 (C1,4) = 1144               5.2%
-
- full turn: 52*51*50*49/24 = 270,725
- rainbow: 13**4 = 28,561                                      10.5%
- threeColor: C3,4 * C1,3 * (C1,13*C1,13*C2,13)  = 158,184     58.4%
- twoColor: C2,4 * (C2,13 *C2,13 + C1,2*C1,13*C3,13) = 81,120  30.0%
- OneColor: C1,4 * C4,13 = 2,860   1.1%
-'''
 
 '''
-          Range vs Range          Time
-rainbow   78comb vs 78 comb       355.97s
-twoColor  78comb vs 78 comb       785.69s
-oneColor  78comb vs 78 comb       221.97s
+full flop: 52*51*50/6 = 22,100
+rainbow : 2197(given three color) * 4 (C1,4) = 8788  39%
+TwoColor: 2*(13*12/2)*13* 6 (C2,4) = 12168           55%
+OneColor: 13*12*11/6 * 4 (C1,4) = 1144               5.2%
+
+full turn: 52*51*50*49/24 = 270,725
+rainbow: 13**4 = 28,561                                      10.5%
+threeColor: C3,4 * C1,3 * (C1,13*C1,13*C2,13)  = 158,184     58.4%
+twoColor: C2,4 * (C2,13 *C2,13 + C1,2*C1,13*C3,13) = 81,120  30.0%
+OneColor: C1,4 * C4,13 = 2,860   1.1%
+'''
+
+'''
+flop      Range vs Range       rb   Time
+rainbow   78comb vs 78 comb    377   355.97s/ 407.04s
+twoColor  78comb vs 78 comb    364   785.69s/456.30s
+oneColor  78comb vs 78 comb    286   221.97s/384.57s
 
 '''

@@ -52,27 +52,44 @@ for i in range(len(hr)):
         third = str(op_hr.hands[j][0][0])
         fourth = str(op_hr.hands[j][0][1])
         pairs.append((first+second+third+fourth))
-
+fre=fre1=fre2=fre3=sub=0
 rb={}   ## TwoColor
 for idx1,b1 in enumerate(rank1):  # 1014 *12 = 12168
     for idx2, b2 in enumerate(rank1):
         for idx3, b3 in enumerate(rank2):
+            '''
+            (858, 156, 0)
+            onePair twoPair set
+            '''
             if idx1<idx2:
-                if idx2!=idx3 and idx1!=idx3:
+                if idx1<idx2<idx3:  #286
                     # pass  # 858
-                    rb[(b1+b2+b3)]=12
+                    rb[(b1+b2+b3)]=12*3     # 1<2<3, 1<3<2, 3<1<2
                     '''
                     Range vs Range
                     [QQ, AQs,AQo]
                     board = AsBdCh, AdBsCh
 
                     '''
-                if idx2==idx3 or idx1==idx3:
+                if idx1==idx3<idx2:   #78
                     # pass  #156
-                    rb[(b1+b2+b3)]=12
-# pprint(rb)
-# print(len(rb))
+                    rb[(b1+b2+b3)]=12*2     # C2,4*C1,2 = 12, 2 (1=3<2, 1<2=3)
 
+#                 array = set([idx1,idx2,idx3])
+#                 if len(array) == 3:
+#                     fre +=1
+#                 elif len(array) ==2:
+#                     fre1+=1
+#                 else:
+#                     fre2+=1
+#
+# print(fre,fre1,fre2)
+# print("the number of board: %d" % len(rb))
+# for i in rb.values():
+#     sub +=i
+# print(sub)
+
+print("the number of board: %d" % len(rb))
 groups = {}
 pprint(len(rb))
 for pair in pairs:
@@ -146,11 +163,10 @@ print("total game: %s" % total)              # 990* 455 = 450450  990*2041 = 2,0
  OneColor: 13*12*11/6 * 4 (C1,4) = 1144 5.2%
 
 '''
-
 '''
-          Range vs Range          Time
-rainbow   78comb vs 78 comb       355.97s
-twoColor  78comb vs 78 comb       785.69s
-oneColor  78comb vs 78 comb       221.97s
+flop      Range vs Range       rb   Time
+rainbow   78comb vs 78 comb    377   355.97s/ 407.04s
+twoColor  78comb vs 78 comb    364   785.69s/456.30s
+oneColor  78comb vs 78 comb    286   221.97s/384.57s
 
 '''

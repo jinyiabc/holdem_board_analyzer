@@ -94,19 +94,19 @@ for idx1,b1 in enumerate(rank1):  # (3,2,0,0)      # 48334= c3,13*C1,13*C1,13  i
                         if idx1==idx3<idx2<idx4<idx5:  # 715  # 1=3<4<5 => 2 can place 1=3<2<4<5,1=3<4<2<5,1=3<4<5<2
                             # pass
                             # print(idx1,idx3,idx2,idx4,idx5)
-                            rb[(b1+b3+b2+b4+b5)]=12*3
-                        if idx1<idx3==idx2<idx4<idx5:
-                            # pass
-                            # print(idx1,idx3,idx2,idx4,idx5)
-                            rb[(b1+b3+b2+b4+b5)]=12*3
-                        if idx1<idx3<idx2==idx4<idx5:
-                            # pass
-                            # print(idx1,idx3,idx2,idx4,idx5)
-                            rb[(b1+b3+b2+b4+b5)]=12*3
-                        if idx3<idx1<idx4<idx2==idx5:
-                            # pass
-                            # print(idx1,idx3,idx2,idx4,idx5)
-                            rb[(b3+b1+b4+b2+b5)]=12*3
+                            rb[(b1+b3+b2+b4+b5)]=12*3*4
+                        # if idx1<idx3==idx2<idx4<idx5:
+                        #     # pass
+                        #     # print(idx1,idx3,idx2,idx4,idx5)
+                        #     rb[(b1+b3+b2+b4+b5)]=12*3
+                        # if idx1<idx3<idx2==idx4<idx5:
+                        #     # pass
+                        #     # print(idx1,idx3,idx2,idx4,idx5)
+                        #     rb[(b1+b3+b2+b4+b5)]=12*3
+                        # if idx3<idx1<idx4<idx2==idx5:
+                        #     # pass
+                        #     # print(idx1,idx3,idx2,idx4,idx5)
+                        #     rb[(b3+b1+b4+b2+b5)]=12*3
 
 
 
@@ -114,15 +114,15 @@ for idx1,b1 in enumerate(rank1):  # (3,2,0,0)      # 48334= c3,13*C1,13*C1,13  i
                         if idx1==idx3<idx2==idx4<idx5:  # 286
                             # pass
                             # print(idx1,idx3,idx2,idx4,idx5)
-                            rb[(b1+b3+b2+b4+b5)]=12*1
-                        if idx1==idx3<idx4<idx2==idx5:
-                            # pass
-                            # print(idx1,idx3,idx2,idx4,idx5)
-                            rb[(b1+b3+b4+b2+b5)]=12*1
-                        if idx3<idx1==idx4<idx2==idx5:
-                            # pass
-                            # print(idx1,idx3,idx2,idx4,idx5)
-                            rb[(b3+b1+b4+b2+b5)]=12*1
+                            rb[(b1+b3+b2+b4+b5)]=12*3
+                        # if idx1==idx3<idx4<idx2==idx5:
+                        #     # pass
+                        #     # print(idx1,idx3,idx2,idx4,idx5)
+                        #     rb[(b1+b3+b4+b2+b5)]=12*1
+                        # if idx3<idx1==idx4<idx2==idx5:
+                        #     # pass
+                        #     # print(idx1,idx3,idx2,idx4,idx5)
+                        #     rb[(b3+b1+b4+b2+b5)]=12*1
 
 
 
@@ -171,7 +171,7 @@ for idx1,b1 in enumerate(rank1):   # (4,1,0,0) = 12*9295  iteration=2002 => 1430
 # print(total) # 1,529,112  = 9,767,472 (3,1,1,0) + 949104 (2,2,1,0)
 
 groups = {}
-pprint(len(rb))
+pprint("The number of river board: %d" %len(rb))
 for pair in pairs:
     for bd in rb:
         groups[(pair+bd)]=rb[bd]
@@ -197,7 +197,7 @@ def try_my_operation(group):
             fc = groups[group]
             me = array[:2]
             op = array[2:4]
-            board = [array[4], array[5], array[6], '__', '__']
+            board = [array[4], array[5], array[6], array[7], array[8]]
             # print(group)
             # print(me , op)
             # print(board)
@@ -263,14 +263,14 @@ twoColor  78comb vs 78 comb       785.69s
 oneColor  78comb vs 78 comb       221.97s
 
 turn      Range vs Range          Time
-rainbow   78comb vs 78 comb       1371.85s
+rainbow   78comb vs 78 comb       10min
 threeColor78comb vs 78 comb       1314.13s
 twoColor  78comb vs 78 comb       38min=2280s
 oneColor  78comb vs 78 comb       8min=480s
 
-river      Range vs Range         Time
-rainbow   78comb vs 78 comb       27min
-threeColor78comb vs 78 comb
-twoColor  78comb vs 78 comb
-oneColor  78comb vs 78 comb
+river      Range vs Range      rb   Time
+rainbow   78comb vs 78 comb    2366   2hour+
+threeColor78comb vs 78 comb    11882
+twoColor  78comb vs 78 comb    4290
+oneColor  78comb vs 78 comb    1287  4min
 '''
