@@ -12,10 +12,10 @@ from operator import add
 pokereval = PokerEval()
 # import a new API to create a thread pool
 # from concurrent.futures import ThreadPoolExecutor as PoolExecutor   #real	1m11.866s
-from concurrent.futures import ProcessPoolExecutor as PoolExecutor    #real	0m32.562s
-import concurrent.futures
+# from concurrent.futures import ProcessPoolExecutor as PoolExecutor    #real	0m32.562s
+# import concurrent.futures
 # create a thread pool of 4 threads
-executor = PoolExecutor(max_workers=4)
+# executor = PoolExecutor(max_workers=4)
 
 '''
  full flop: 52*51*50/6 = 22,100

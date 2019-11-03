@@ -1,30 +1,31 @@
 
 import sys
-sys.path.insert(0, "./board")
-from flop1 import group_card_flop1
-from flop2 import group_card_flop2
-from flop3 import group_card_flop3
-from turn1 import group_card_turn1
-from turn2 import group_card_turn2
-from turn3 import group_card_turn3
-from turn4 import group_card_turn4
-from river1 import group_card_river1
-from river2 import group_card_river2
-from river3 import group_card_river3
-from river4 import group_card_river4
-
+sys.path.insert(0, "./best_cards")
+from best5_one import list_group_card_flop1
+from best5_two import list_group_card_flop2
+from best5_three import list_group_card_flop3
+from best6_one import list_group_card_turn1
+from best6_two import list_group_card_turn2
+from best6_three import list_group_card_turn3
+from best6_four import list_group_card_turn4
+from best7_one import list_group_card_river1
+from best7_two import list_group_card_river2
+from best7_three import list_group_card_river3
+from best7_four import list_group_card_river4
 
 import eval7
 from tqdm import tqdm
 import traceback
+from operator import add
+import datetime
 from pokereval import PokerEval
 pokereval = PokerEval()
 
 '''
 usage:
- python test_argument.py str=flop color=one high=K low=5
+ python test_argument_best.py str=flop color=one low=5 high=K
 
-str: flop or turn or river
+str: flop, turn, river
 color: one, two, three, four
 low,high: 23456789TJQKA
 '''
@@ -46,10 +47,27 @@ def scope(arg):
                 high=11; scope=11
             elif arg[i][5:] == 'K':
                 high=12; scope=12
-            elif int(arg[i][5:]) == 6 or 7 or 8:
-                high = int(arg[i][5:])-1; scope=high
+            elif arg[i][5:] == '2':
+                high=1; scope=1
+            elif arg[i][5:] == '9':
+                high=8; scope=8
+            elif arg[i][5:] == '3':
+                high=2; scope=2
+            elif arg[i][5:] == '4':
+                high=3; scope=3
+            elif arg[i][5:] == '5':
+                high=4; scope=4
+            elif arg[i][5:] == '6':
+                high=5; scope=5
+            elif arg[i][5:] == '7':
+                high=6; scope=6
+            elif arg[i][5:] == '8':
+                high=7; scope=7
             else:
-                high=13; scope=12
+                high=13; scope=13
+        else:
+            high=13; scope=13
+
         if 'low=' in arg[i]:
             if arg[i][4:] == 'T':
                 low=9; scope0=8
@@ -59,10 +77,26 @@ def scope(arg):
                 low=11; scope0=10
             elif arg[i][4:] == 'K':
                 low=12; scope0=11
-            elif int(arg[i][4:]) == 9 or 8 or 7:
-                low = int(arg[i][4:])-1; scope0=low-1
+            elif arg[i][4:] == 'A':
+                high=13; scope=12
+            elif arg[i][4:] == '9':
+                low=8; scope0=7
+            elif arg[i][4:] == '3':
+                low=2; scope0=1
+            elif arg[i][4:] == '4':
+                low=3; scope0=2
+            elif arg[i][4:] == '5':
+                low=4; scope0=3
+            elif arg[i][4:] == '6':
+                low=5; scope0=4
+            elif arg[i][4:] == '7':
+                low=6; scope0=5
+            elif arg[i][4:] == '8':
+                low=7; scope0=6
             else:
                 low=1; scope0=0
+        else:
+            low=1; scope0=0
 
     # print("scope",scope)
     # print("scope0", scope0)
@@ -148,6 +182,7 @@ def scope(arg):
 
 def try_my_operation(group,fc):
         try:
+            # pass
             array = [group[i:i+2] for i in range(0, len(group), 2)]
             '''
             test for cards duplication
@@ -156,24 +191,56 @@ def try_my_operation(group,fc):
                 # f.close()
                 return None
             # print(array)
-            # fc = groups[group]
-            me = array[:2]
-            op = array[2:4]
-            board = [array[4], array[5], array[6], '__', '__']
-            # print(group)
-            # print(me , op)
-            # print(board)
+            # me = array[:2]
+            # # op = array[2:4]
+            # board = array[2:]
 
-            # f=open("guru100.txt","a+")
-            result = pokereval.poker_eval(game='holdem', pockets=[me, op], board=board)
-            #pprint(result['eval'][0]['scoop'])
-            #pprint(result['info'][0])
-            scoop = result['eval'][0]['scoop']*fc
-            tie = result['eval'][0]['tiehi']*fc
-            total = result['info'][0]*fc
-            # f.write("%s %s %s %s\n " %  (group,scoop,tie,total))
-            # f.close()
-            return (scoop,tie,total)
+            best_hand = pokereval.best_hand("hi", array)
+            # print(best_hand[0], groups[group])
+            # print(best_hand[0], pokereval.card2string(best_hand[1:]))
+            # print(best_hand[0])
+            '''
+                Nothing (only if "side" equals "low")
+                NoPair
+                OnePair
+                TwoPair
+                Trips
+                Straight
+                Flush
+                FlHouse
+                Quads
+                StFlush
+            '''
+            if best_hand[0] == 'NoPair':
+                result = [fc,0,0,0,0,0,0,0,0]
+            elif best_hand[0] == 'OnePair':
+                result = [0,fc,0,0,0,0,0,0,0]
+            elif best_hand[0] == 'TwoPair':
+                result = [0,0,fc,0,0,0,0,0,0]
+            elif best_hand[0] == 'Trips':
+                result = [0,0,0,fc,0,0,0,0,0]
+            elif best_hand[0] == 'Straight':
+                result = [0,0,0,0,fc,0,0,0,0]
+            elif best_hand[0] == 'Flush':
+                result = [0,0,0,0,0,fc,0,0,0]
+            elif best_hand[0] == 'FlHouse':
+                result = [0,0,0,0,0,0,fc,0,0]
+            elif best_hand[0] == 'Quads':
+                result = [0,0,0,0,0,0,0,fc,0]
+            else:                #'StFlush'
+                result = [0,0,0,0,0,0,0,0,fc]
+            return result
+
+            # # f=open("guru100.txt","a+")
+            # result = pokereval.poker_eval(game='holdem', pockets=[me, op], board=board)
+            # #pprint(result['eval'][0]['scoop'])
+            # #pprint(result['info'][0])
+            # scoop = result['eval'][0]['scoop']*fc
+            # tie = result['eval'][0]['tiehi']*fc
+            # total = result['info'][0]*fc
+            # # f.write("%s %s %s %s\n " %  (group,scoop,tie,total))
+            # # f.close()
+            # return (scoop,tie,total)
         except Exception as e:
             print('Caught exception in worker thread %s' % group)
 
@@ -192,51 +259,67 @@ def main():
     hr2 = eval7.HandRange("77+, A9+, KT+, QT+, JT, T9s, 98s, 87s, 76s, 65s")
     hr3 = eval7.HandRange("22+, A7o+, KT+, QT+, JT, T9, 98s, 87s, 76s, 65s, A2s+, K9s, K8s, Q9s, Q8s, \
     64s, 75s, 86s, 97s, T8s, J9s")
-
+    handRanges = [hr1,hr2,hr3]
     hr = hr1
-    op_hr = hr1
 
     '''
     pass the task function, followed by the parameters to processors
     '''
     rank_list = scope(sys.argv)
     if len(rank_list) == 3 and sys.argv[2][6:]=='one':
-        groups = group_card_flop1(hr, op_hr, rank_list)
+        list_groups = list_group_card_flop1(handRanges,rank_list)
     if len(rank_list) == 3 and sys.argv[2][6:]=='two':
-        groups = group_card_flop2(hr, op_hr, rank_list)
+        list_groups = list_group_card_flop2(handRanges,rank_list)
     if len(rank_list) == 3 and sys.argv[2][6:]=='three':
-        groups = group_card_flop3(hr, op_hr, rank_list)
+        list_groups = list_group_card_flop3(handRanges,rank_list)
 
 
     if len(rank_list)==8 and sys.argv[2][6:]=='one':
-        groups = group_card_turn1(hr, op_hr, rank_list)
+        list_groups = list_group_card_turn1(handRanges,rank_list)
     if len(rank_list)==8 and sys.argv[2][6:]=='two':
-        groups = group_card_turn2(hr, op_hr, rank_list)
+        list_groups = list_group_card_turn2(handRanges,rank_list)
     if len(rank_list)==8 and sys.argv[2][6:]=='three':
-        groups = group_card_turn3(hr, op_hr, rank_list)
+        list_groups = list_group_card_turn3(handRanges,rank_list)
     if len(rank_list)==8 and sys.argv[2][6:]=='four':
-        groups = group_card_turn4(hr, op_hr, rank_list)
+        list_groups = list_group_card_turn4(handRanges,rank_list)
 
     if len(rank_list)==10 and sys.argv[2][6:] == 'one':
-        groups = group_card_river1(hr, op_hr, rank_list)
+        list_groups = list_group_card_river1(handRanges,rank_list)
     if len(rank_list)==10 and (sys.argv[2][6:] == 'two') :
-        groups = group_card_river2(hr, op_hr, rank_list)
+        list_groups = list_group_card_river2(handRanges,rank_list)
     if len(rank_list)==10 and (sys.argv[2][6:] == 'three') :
-        groups = group_card_river3(hr, op_hr, rank_list)
+        list_groups = list_group_card_river3(handRanges,rank_list)
     if len(rank_list)==10 and (sys.argv[2][6:] == 'four') :
-        groups = group_card_river4(hr, op_hr, rank_list)
+        list_groups = list_group_card_river4(handRanges,rank_list)
 
-    scoop=total=tie=0
-    for group in tqdm(groups):
-        fc = groups[group]
-        if try_my_operation(group, fc) != None:
-            scoop1=tie1=total1 =0
-            scoop1, tie1, total1 = try_my_operation(group,fc)
-            scoop+=scoop1; tie+=tie1; total+=total1
-            # print(group,scoop,tie,total)
+    for groups in list_groups:
 
-    print("Equity: %18.9f " % ((scoop+tie*1.0/2)*1.0/total))
-    print("total game: %s" % total)              # 990* 455 = 450450  990*2041 = 2,020,590 (13*13*13=2197, A<=B<=C A=C<B(78) and A=C>B (78)excluded)
+        NoPair=OnePair=TwoPair=Trips=Straight=Flush=Quads=StFlush=0
+        result=newResult=[0,0,0,0,0,0,0,0,0]
+        for group in tqdm(groups):
+            fc = groups[group]
+            if try_my_operation(group, fc) != None:
+                result = list( map(add, result, try_my_operation(group, fc)))
+                # print(result,group)
+
+        # print("Equity: %18.9f " % ((scoop+tie*1.0/2)*1.0/total))
+        # print("total game: %s" % total)              # 990* 455 = 450450  990*2041 = 2,020,590 (13*13*13=2197, A<=B<=C A=C<B(78) and A=C>B (78)excluded)
+        # # print("iteration: %s" % fre)  # 2197 => 546
+        # print(result)
+        total=0
+        for i in result:
+            total += i
+
+        newResult=[result[i]*1.0/total for i in range(len(result))]
+        name=''
+        for i in range(len(sys.argv)):
+            if i>0:
+                name += '__'+sys.argv[i]
+        t1 = datetime.datetime.now()
+        f=open("./log/guru"+name+'__'+str(t1.isoformat()[:10])+".txt","a+")
+        # f.write("NoPair OnePair TwoPair Trips Straight Flush FlHouse Quads StFlush \n")
+        f.write("%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f \n" % (newResult[0],newResult[1],newResult[2],newResult[3],newResult[4],newResult[5],newResult[6],newResult[7],newResult[8]))
+        f.close()
 
 if __name__ == "__main__":
     main()
