@@ -180,6 +180,8 @@ def scope(arg):
         if 'color=' in arg[i]:
             # print("color= %s" %arg[i][6:])
             color = arg[i][6:]
+        if 'dead=' in arg[i]:
+            dead_cards = [arg[i][:2],arg[i][2:4]]
 
     if str=="flop":
         if color == 'one':
@@ -227,7 +229,8 @@ def scope(arg):
         new_rank1=rank[0][scope0:scope]
         new_rank2=rank[1][scope0:scope]
         new_rank3=rank[2][scope0:scope]
-        return (new_rank1,new_rank2,new_rank3)
+        rank_list = [new_rank1,new_rank2,new_rank3]
+        # return (new_rank1,new_rank2,new_rank3)
     if len(rank)==8:
         new_rank1=rank[0][scope0:scope]
         new_rank2=rank[1][scope0:scope]
@@ -237,8 +240,8 @@ def scope(arg):
         new_rank6=rank[5][scope0:scope]
         new_rank7=rank[6][scope0:scope]
         new_rank8=rank[7][scope0:scope]
-        return (new_rank1,new_rank2,new_rank3,new_rank4, \
-                new_rank5,new_rank6,new_rank7,new_rank8)
+        rank_list =  [new_rank1,new_rank2,new_rank3,new_rank4, \
+                new_rank5,new_rank6,new_rank7,new_rank8]
     if len(rank)==10:
         new_rank1=rank[0][scope0:scope]
         new_rank2=rank[1][scope0:scope]
@@ -250,9 +253,9 @@ def scope(arg):
         new_rank8=rank[7][scope0:scope]
         new_rank9=rank[8][scope0:scope]
         new_rank10=rank[9][scope0:scope]
-        return (new_rank1,new_rank2,new_rank3,new_rank4, \
-                new_rank5,new_rank6,new_rank7,new_rank8,new_rank9,new_rank10)
-
+        rank_list = [new_rank1,new_rank2,new_rank3,new_rank4, \
+                new_rank5,new_rank6,new_rank7,new_rank8,new_rank9,new_rank10]
+    return (str,dead_cards,color,rank_list)
 def try_my_operation(group,fc):
         try:
             # pass
@@ -334,35 +337,35 @@ def main():
     64s, 75s, 86s, 97s, T8s, J9s")
     handRanges = [hr1,hr2,hr3]
     hr = hr1
-    dead_cards = [sys.argv[3][:2],sys.argv[3][2:4]]
+    # dead_cards = [sys.argv[3][:2],sys.argv[3][2:4]]
     '''
     pass the task function, followed by the parameters to processors
     '''
-    rank_list = scope(sys.argv)
-    if len(rank_list) == 3 and sys.argv[2][6:]=='one':
+    str, dead_cards, color, rank_list = scope(sys.argv)
+    if str == 'flop' and color=='one':
         list_groups = list_group_card_flop1(handRanges,rank_list,dead_cards)
-    if len(rank_list) == 3 and sys.argv[2][6:]=='two':
+    if str == 'flop' and color=='two':
         list_groups = list_group_card_flop2(handRanges,rank_list,dead_cards)
-    if len(rank_list) == 3 and sys.argv[2][6:]=='three':
+    if str == 'flop' and color=='three':
         list_groups = list_group_card_flop3(handRanges,rank_list,dead_cards)
 
 
-    if len(rank_list)==8 and sys.argv[2][6:]=='one':
+    if str=='turn' and color=='one':
         list_groups = list_group_card_turn1(handRanges,rank_list,dead_cards)
-    if len(rank_list)==8 and sys.argv[2][6:]=='two':
+    if str=='turn' and color=='two':
         list_groups = list_group_card_turn2(handRanges,rank_list,dead_cards)
-    if len(rank_list)==8 and sys.argv[2][6:]=='three':
+    if str=='turn' and color=='three':
         list_groups = list_group_card_turn3(handRanges,rank_list,dead_cards)
-    if len(rank_list)==8 and sys.argv[2][6:]=='four':
+    if str=='turn' and color=='four':
         list_groups = list_group_card_turn4(handRanges,rank_list,dead_cards)
 
-    if len(rank_list)==10 and sys.argv[2][6:] == 'one':
+    if str=='river' and color == 'one':
         list_groups = list_group_card_river1(handRanges,rank_list,dead_cards)
-    if len(rank_list)==10 and (sys.argv[2][6:] == 'two') :
+    if str=='river' and (color == 'two') :
         list_groups = list_group_card_river2(handRanges,rank_list,dead_cards)
-    if len(rank_list)==10 and (sys.argv[2][6:] == 'three') :
+    if str=='river' and (color == 'three') :
         list_groups = list_group_card_river3(handRanges,rank_list,dead_cards)
-    if len(rank_list)==10 and (sys.argv[2][6:] == 'four') :
+    if str=='river' and (color == 'four') :
         list_groups = list_group_card_river4(handRanges,rank_list,dead_cards)
 
     for groups in list_groups:
@@ -389,7 +392,7 @@ def main():
             if i>0:
                 name += '__'+sys.argv[i]
         t1 = datetime.datetime.now()
-        f=open("./log/guru"+name+'__'+str(t1.isoformat()[:10])+".txt","a+")
+        f=open("./log/guru"+name+'__'+repr(t1.isoformat()[:10])+".txt","a+")
         # f.write("NoPair OnePair TwoPair Trips Straight Flush FlHouse Quads StFlush \n")
         f.write("%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f \n" % (newResult[0],newResult[1],newResult[2],newResult[3],newResult[4],newResult[5],newResult[6],newResult[7],newResult[8]))
         f.close()
