@@ -38,7 +38,9 @@ rank4 = ["2s","3s","4s","5s","6s","7s","8s","9s","Ts","Js","Qs","Ks","As"]
 # hand vs hand 0.08s  total game: 1979010
 # range vs range 78*6 15s total game: 585293940  78*78  0:03:39.749825
 handRanges = [hr1,hr2,hr3]
-rank_list=[rank1,rank1,rank2,rank2,rank1,rank1,rank1,rank2]
+# rank_list=[rank1[3:12],rank2[3:12],rank3[3:12]]
+rank_list=[rank1,rank2,rank3]
+
 
 # f=open("guru103.txt","a+")
 # f.write("  NoPair  OnePair TwoPair Trips Straight  Flush   FlHouse Quads   StFlush \n")
@@ -114,6 +116,7 @@ def try_my_operation(group,fc):
             print()
 
             raise e
+
 def handRange_remove_dead(rb, hr, dead_cards):
     pairs = {}
     for i in range(len(hr)):
@@ -187,77 +190,39 @@ def handRange_remove_dead(rb, hr, dead_cards):
     pprint(pairs)
     return pairs
 
-    
-def list_group_card_turn2(handRanges,rank_list,dead_cards):
+
+def list_group_card_flop3(handRanges,rank_list,dead_cards):
     list=[]
     for hr in handRanges:
-
-
-        rb={}   ## turn twoColor  # 81,120 =>3224
-        for idx1,b1 in enumerate(rank_list[0]):
+        rb={}   ## rainbow
+        for idx1,b1 in enumerate(rank_list[0]):  # (2197->455)
             for idx2, b2 in enumerate(rank_list[1]):
                 for idx3, b3 in enumerate(rank_list[2]):
-                    for idx4, b4 in enumerate(rank_list[3]):
+                    if idx1<idx2<idx3:
+                        # pass
+                        rb[(b1+b2+b3)]=6
+                        '''
+                        Range vs Range
+                        [QQ, AQs,AQo]
+                        board = AsBdCh, AdBsCh
 
-                        if idx1<idx2<idx3<idx4:  # 715
-                            # pass
-                            rb[(b1+b2+b3+b4)]=36
-                            '''
-                            Range vs Range
-                            [QQ, AQs,AQo]
-                            board = AsBdCh, AdBsCh
-
-                            '''
-                        if idx1==idx3<idx2<idx4:  #286
-                            # pass
-                            rb[(b1+b3+b2+b4)]=12
-                        if idx1<idx2==idx3<idx4:  # 286
-                            # pass
-                            rb[(b1+b2+b3+b4)]=12
-                        if idx1<idx3<idx2==idx4:  # 286
-                            # pass
-                            rb[(b1+b3+b2+b4)]=12
-                        # if idx1==idx2==idx3<idx4:  #78
-                        #     # pass
-                        #     rb[(b1+b2+b3+b4)]=0
-                        # if idx3<idx4==idx1==idx2:  #78
-                        #     # pass
-                        #     rb[(b3+b4+b1+b2)]=0
-                        if idx1==idx3<idx2==idx4:  #78
-                            # pass
-                            rb[(b1+b3+b2+b4)]=6
-                        # if idx1==idx2==idx3==idx4:  #13
-                        #     # pass
-                        #     rb[(b1+b2+b3+b4)]=0
-        for idx1,b1 in enumerate(rank_list[4]):
-            for idx2, b2 in enumerate(rank_list[5]):
-                for idx3, b3 in enumerate(rank_list[6]):
-                    for idx4, b4 in enumerate(rank_list[7]):
-                        if idx1<idx2<idx3<idx4:  # 715
-                            # pass
-                            rb[(b1+b2+b3+b4)]=48
-                            '''
-                            Range vs Range
-                            [QQ, AQs,AQo]
-                            board = AsBdCh, AdBsCh
-
-                            '''
-                        if idx1==idx4<idx2<idx3:  # 286
-                            # pass
-                            rb[(b1+b4+b2+b3)]=12
-                        if idx1<idx2==idx4<idx3:  # 286
-                            # pass
-                            rb[(b1+b2+b4+b3)]=12
-                        if idx1<idx2<idx3==idx4:  # 286
-                            # pass
-                            rb[(b1+b2+b3+b4)]=12
+                        '''
+                    if idx1==idx2 and idx2<idx3:
+                        # pass
+                        rb[(b1+b2+b3)]=3
+                    if idx1<idx2 and idx2==idx3:
+                        # pass
+                        rb[(b1+b2+b3)]=3
+                    if idx1==idx2==idx3:
+                        # pass
+                        rb[(b1+b2+b3)]=1
         pairs = handRange_remove_dead(rb, hr, dead_cards)
 
         groups = {}
         pprint(len(rb))
         for pair in pairs:
             for bd in rb:
-                groups[(pair+bd)]=rb[bd]
+                groups[(pair+bd)]=rb[bd]*pairs[pair]
         # pprint(groups)
         # print(len(groups))
         # print(len(pairs),len(rb))
@@ -268,8 +233,8 @@ def list_group_card_turn2(handRanges,rank_list,dead_cards):
     return list
 
 def main():
-    dead_cards=['','']
-    list_groups = list_group_card_turn2(handRanges,rank_list,dead_cards)
+    dead_cards = ['', '']
+    list_groups = list_group_card_flop3(handRanges,rank_list,dead_cards)
     for groups in list_groups:
 
         NoPair=OnePair=TwoPair=Trips=Straight=Flush=Quads=StFlush=0

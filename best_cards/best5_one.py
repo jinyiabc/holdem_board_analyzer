@@ -114,17 +114,81 @@ def try_my_operation(group,fc):
             print()
 
             raise e
+def handRange_remove_dead(rb, hr, dead_cards):
+    pairs = {}
+    for i in range(len(hr)):
+        first = str(hr.hands[i][0][0])
+        second = str(hr.hands[i][0][1])
+        if dead_cards[0] == '' or dead_cards[1] == '':
+            pairs[first+second]=1
+            continue
+        if dead_cards[0][0] == dead_cards[1][0]:
 
-def list_group_card_flop1(handRanges,rank_list):
+            '''
+            A=B=a=b
+            '''
+            if first[0] == dead_cards[0][0] and second[0] == dead_cards[0][0]:
+                pairs[first+second]=1.0/6
+                '''
+                A==a,B!=a
+                A!=a,B==a
+                '''
+            elif first[0] == dead_cards[0][0] and second[0] != dead_cards[0][0] :
+                pairs[first+second]=3.0/4
+            elif first[0] != dead_cards[0][0] and second[0] == dead_cards[0][0] :
+                pairs[first+second]=3.0/4
+            else:
+                pairs[first+second]=1
+
+        if dead_cards[0][0] != dead_cards[1][0]:
+            '''
+            A=B=a or A=B=b
+            '''
+            if (first[0]==second[0]==dead_cards[0][0]) or (first[0]==second[0]==dead_cards[1][0]) :
+                pairs[first+second]=1.0/2
+
+                '''
+                (A==a, A!=b, B!=a, B!=b)
+                (A==b, A!=a, B!=a, B!=b)
+                '''
+            elif (first[0]==dead_cards[0][0] and second[0]!=dead_cards[0][0]) and \
+                 (first[0]!=dead_cards[1][0] and second[0]!=dead_cards[1][0]) :
+                pairs[first+second]=3.0/4
+            elif (first[0]==dead_cards[1][0] and second[0]!=dead_cards[0][0]) and \
+                 (first[0]!=dead_cards[0][0] and second[0]!=dead_cards[1][0]) :
+                pairs[first+second]=3.0/4
+                '''
+                (A!=a, A!=b, B==a, B!=b)
+                (A!=a, A!=b, B==b, B!=a)
+                '''
+
+            elif (first[0]!=dead_cards[0][0] and second[0]==dead_cards[0][0]) and \
+                 (first[0]!=dead_cards[1][0] and second[0]!=dead_cards[1][0]) :
+                pairs[first+second]=3.0/4
+            elif (first[0]!=dead_cards[0][0] and second[0]==dead_cards[1][0]) and \
+                 (first[0]!=dead_cards[1][0] and second[0]!=dead_cards[0][0]) :
+                pairs[first+second]=3.0/4
+                '''
+                (A==a, B==b)
+                (A==b, B==a)
+                '''
+            elif (first[0]==dead_cards[0][0] and second[0]==dead_cards[1][0]) or \
+                 (first[0]==dead_cards[1][0] and second[0]==dead_cards[0][0]) :
+                pairs[first+second]=9.0/16
+            else:
+                pairs[first+second]=1
+
+    # pprint(pairs)
+    # groups = {}
+    # pprint(len(rb))
+    # for pair in pairs:
+    #     for bd in rb:
+    #         groups[(pair+bd)]=rb[bd]*pairs[pair]
+    pprint(pairs)
+    return pairs
+def list_group_card_flop1(handRanges,rank_list,dead_cards):
     list=[]
-    for hr in handRanges:
-        pairs = []
-        for i in range(len(hr)):
-            # for j in range(len(op_hr)):
-                first = str(hr.hands[i][0][0])
-                second = str(hr.hands[i][0][1])
-                pairs.append((first+second))
-
+    for hr in handRanges:    
         rb={}   ## oneColor
         for idx1,b1 in enumerate(rank_list[0]):  # (2197->455)
             for idx2, b2 in enumerate(rank_list[1]):
@@ -138,6 +202,7 @@ def list_group_card_flop1(handRanges,rank_list):
                         board = AsBdCh, AdBsCh
 
                         '''
+        pairs = handRange_remove_dead(rb, hr, dead_cards)
         groups = {}
         pprint(len(rb))
         for pair in pairs:
@@ -153,7 +218,8 @@ def list_group_card_flop1(handRanges,rank_list):
     return list
 
 def main():
-    list_groups = list_group_card_flop1(handRanges,rank_list)
+    dead_cards = ['', '']
+    list_groups = list_group_card_flop1(handRanges,rank_list,dead_cards)
     for groups in list_groups:
 
         NoPair=OnePair=TwoPair=Trips=Straight=Flush=Quads=StFlush=0

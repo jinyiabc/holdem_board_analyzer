@@ -38,7 +38,9 @@ rank4 = ["2s","3s","4s","5s","6s","7s","8s","9s","Ts","Js","Qs","Ks","As"]
 # hand vs hand 0.08s  total game: 1979010
 # range vs range 78*6 15s total game: 585293940  78*78  0:03:39.749825
 handRanges = [hr1,hr2,hr3]
-rank_list=[rank1,rank1,rank2,rank2,rank1,rank1,rank1,rank2]
+# rank_list=[rank1[3:12],rank2[3:12],rank3[3:12]]
+rank_list=[rank1,rank2,rank3]
+
 
 # f=open("guru103.txt","a+")
 # f.write("  NoPair  OnePair TwoPair Trips Straight  Flush   FlHouse Quads   StFlush \n")
@@ -122,142 +124,89 @@ def handRange_remove_dead(rb, hr, dead_cards):
         if dead_cards[0] == '' or dead_cards[1] == '':
             pairs[first+second]=1
             continue
-        if dead_cards[0][0] == dead_cards[1][0]:
-
-            '''
-            A=B=a=b
-            '''
-            if first[0] == dead_cards[0][0] and second[0] == dead_cards[0][0]:
-                pairs[first+second]=1.0/6
-                '''
-                A==a,B!=a
-                A!=a,B==a
-                '''
-            elif first[0] == dead_cards[0][0] and second[0] != dead_cards[0][0] :
-                pairs[first+second]=3.0/4
-            elif first[0] != dead_cards[0][0] and second[0] == dead_cards[0][0] :
-                pairs[first+second]=3.0/4
+        else:
+            if first == dead_cards[0] or first == dead_cards[1] or second == dead_cards[0] or \
+                second == dead_cards[1]:
+                pairs[first+second]=0
             else:
                 pairs[first+second]=1
 
-        if dead_cards[0][0] != dead_cards[1][0]:
-            '''
-            A=B=a or A=B=b
-            '''
-            if (first[0]==second[0]==dead_cards[0][0]) or (first[0]==second[0]==dead_cards[1][0]) :
-                pairs[first+second]=1.0/2
-
-                '''
-                (A==a, A!=b, B!=a, B!=b)
-                (A==b, A!=a, B!=a, B!=b)
-                '''
-            elif (first[0]==dead_cards[0][0] and second[0]!=dead_cards[0][0]) and \
-                 (first[0]!=dead_cards[1][0] and second[0]!=dead_cards[1][0]) :
-                pairs[first+second]=3.0/4
-            elif (first[0]==dead_cards[1][0] and second[0]!=dead_cards[0][0]) and \
-                 (first[0]!=dead_cards[0][0] and second[0]!=dead_cards[1][0]) :
-                pairs[first+second]=3.0/4
-                '''
-                (A!=a, A!=b, B==a, B!=b)
-                (A!=a, A!=b, B==b, B!=a)
-                '''
-
-            elif (first[0]!=dead_cards[0][0] and second[0]==dead_cards[0][0]) and \
-                 (first[0]!=dead_cards[1][0] and second[0]!=dead_cards[1][0]) :
-                pairs[first+second]=3.0/4
-            elif (first[0]!=dead_cards[0][0] and second[0]==dead_cards[1][0]) and \
-                 (first[0]!=dead_cards[1][0] and second[0]!=dead_cards[0][0]) :
-                pairs[first+second]=3.0/4
-                '''
-                (A==a, B==b)
-                (A==b, B==a)
-                '''
-            elif (first[0]==dead_cards[0][0] and second[0]==dead_cards[1][0]) or \
-                 (first[0]==dead_cards[1][0] and second[0]==dead_cards[0][0]) :
-                pairs[first+second]=9.0/16
-            else:
-                pairs[first+second]=1
-
-    # pprint(pairs)
-    # groups = {}
-    # pprint(len(rb))
-    # for pair in pairs:
-    #     for bd in rb:
-    #         groups[(pair+bd)]=rb[bd]*pairs[pair]
     pprint(pairs)
     return pairs
-
-    
-def list_group_card_turn2(handRanges,rank_list,dead_cards):
+def list_group_card_flop3(handRanges,rank_list,dead_cards):
     list=[]
     for hr in handRanges:
+        rb={}   ## rainbow
+        for idx1,b1 in enumerate(rank1):  # (2197->455)
+            for idx2, b2 in enumerate(rank2):
+                for idx3, b3 in enumerate(rank2):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
+        for idx1,b1 in enumerate(rank1):  # (2197->455)
+            for idx2, b2 in enumerate(rank1):
+                for idx3, b3 in enumerate(rank2):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
+        for idx1,b1 in enumerate(rank1):  # (2197->455)
+            for idx2, b2 in enumerate(rank3):
+                for idx3, b3 in enumerate(rank3):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
+        for idx1,b1 in enumerate(rank1):  # (2197->455)
+            for idx2, b2 in enumerate(rank1):
+                for idx3, b3 in enumerate(rank3):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
 
+        for idx1,b1 in enumerate(rank1):  # (2197->455)
+            for idx2, b2 in enumerate(rank4):
+                for idx3, b3 in enumerate(rank4):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
+        for idx1,b1 in enumerate(rank1):  # (2197->455)
+            for idx2, b2 in enumerate(rank1):
+                for idx3, b3 in enumerate(rank4):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
+        for idx1,b1 in enumerate(rank2):  # (2197->455)
+            for idx2, b2 in enumerate(rank3):
+                for idx3, b3 in enumerate(rank3):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
+        for idx1,b1 in enumerate(rank2):  # (2197->455)
+            for idx2, b2 in enumerate(rank2):
+                for idx3, b3 in enumerate(rank3):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
 
-        rb={}   ## turn twoColor  # 81,120 =>3224
-        for idx1,b1 in enumerate(rank_list[0]):
-            for idx2, b2 in enumerate(rank_list[1]):
-                for idx3, b3 in enumerate(rank_list[2]):
-                    for idx4, b4 in enumerate(rank_list[3]):
+        for idx1,b1 in enumerate(rank2):  # (2197->455)
+            for idx2, b2 in enumerate(rank2):
+                for idx3, b3 in enumerate(rank4):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
+        for idx1,b1 in enumerate(rank2):  # (2197->455)
+            for idx2, b2 in enumerate(rank4):
+                for idx3, b3 in enumerate(rank4):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
+        for idx1,b1 in enumerate(rank3):  # (2197->455)
+            for idx2, b2 in enumerate(rank3):
+                for idx3, b3 in enumerate(rank4):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
+        for idx1,b1 in enumerate(rank3):  # (2197->455)
+            for idx2, b2 in enumerate(rank4):
+                for idx3, b3 in enumerate(rank4):
+                    if b1!='dead_cards[0]' and b1!='dead_cards[1]' and b2!='dead_cards[0]' and b2!='dead_cards[1]' and b3!='dead_cards[0]' and b3!='dead_cards[1]':
+                        rb[(b1+b2+b3)]=1
 
-                        if idx1<idx2<idx3<idx4:  # 715
-                            # pass
-                            rb[(b1+b2+b3+b4)]=36
-                            '''
-                            Range vs Range
-                            [QQ, AQs,AQo]
-                            board = AsBdCh, AdBsCh
-
-                            '''
-                        if idx1==idx3<idx2<idx4:  #286
-                            # pass
-                            rb[(b1+b3+b2+b4)]=12
-                        if idx1<idx2==idx3<idx4:  # 286
-                            # pass
-                            rb[(b1+b2+b3+b4)]=12
-                        if idx1<idx3<idx2==idx4:  # 286
-                            # pass
-                            rb[(b1+b3+b2+b4)]=12
-                        # if idx1==idx2==idx3<idx4:  #78
-                        #     # pass
-                        #     rb[(b1+b2+b3+b4)]=0
-                        # if idx3<idx4==idx1==idx2:  #78
-                        #     # pass
-                        #     rb[(b3+b4+b1+b2)]=0
-                        if idx1==idx3<idx2==idx4:  #78
-                            # pass
-                            rb[(b1+b3+b2+b4)]=6
-                        # if idx1==idx2==idx3==idx4:  #13
-                        #     # pass
-                        #     rb[(b1+b2+b3+b4)]=0
-        for idx1,b1 in enumerate(rank_list[4]):
-            for idx2, b2 in enumerate(rank_list[5]):
-                for idx3, b3 in enumerate(rank_list[6]):
-                    for idx4, b4 in enumerate(rank_list[7]):
-                        if idx1<idx2<idx3<idx4:  # 715
-                            # pass
-                            rb[(b1+b2+b3+b4)]=48
-                            '''
-                            Range vs Range
-                            [QQ, AQs,AQo]
-                            board = AsBdCh, AdBsCh
-
-                            '''
-                        if idx1==idx4<idx2<idx3:  # 286
-                            # pass
-                            rb[(b1+b4+b2+b3)]=12
-                        if idx1<idx2==idx4<idx3:  # 286
-                            # pass
-                            rb[(b1+b2+b4+b3)]=12
-                        if idx1<idx2<idx3==idx4:  # 286
-                            # pass
-                            rb[(b1+b2+b3+b4)]=12
         pairs = handRange_remove_dead(rb, hr, dead_cards)
 
         groups = {}
         pprint(len(rb))
         for pair in pairs:
             for bd in rb:
-                groups[(pair+bd)]=rb[bd]
+                groups[(pair+bd)]=rb[bd]*pairs[pair]
         # pprint(groups)
         # print(len(groups))
         # print(len(pairs),len(rb))
@@ -268,8 +217,8 @@ def list_group_card_turn2(handRanges,rank_list,dead_cards):
     return list
 
 def main():
-    dead_cards=['','']
-    list_groups = list_group_card_turn2(handRanges,rank_list,dead_cards)
+    dead_cards = ['', '']
+    list_groups = list_group_card_flop3(handRanges,rank_list,dead_cards)
     for groups in list_groups:
 
         NoPair=OnePair=TwoPair=Trips=Straight=Flush=Quads=StFlush=0
@@ -289,7 +238,7 @@ def main():
             total += i
 
         newResult=[result[i]*1.0/total for i in range(len(result))]
-        f=open("guru103.txt","a+")
+        f=open("guru104.txt","a+")
         # f.write("NoPair OnePair TwoPair Trips Straight Flush FlHouse Quads StFlush \n")
         f.write("%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f \n" % (newResult[0],newResult[1],newResult[2],newResult[3],newResult[4],newResult[5],newResult[6],newResult[7],newResult[8]))
         f.close()

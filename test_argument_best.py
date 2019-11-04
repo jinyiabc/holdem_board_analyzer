@@ -23,13 +23,86 @@ pokereval = PokerEval()
 
 '''
 usage:
- python test_argument_best.py str=flop color=one low=5 high=K
+ python test_argument_best.py str=flop color=one dead=TdKh low=5 high=K
 
 str: flop, turn, river
 color: one, two, three, four
+dead: TdKh
 low,high: 23456789TJQKA
-'''
 
+'''
+def handRange_remove_dead(rb, hr, dead_cards):
+    pairs = {}
+    for i in range(len(hr)):
+        first = str(hr.hands[i][0][0])
+        second = str(hr.hands[i][0][1])
+        if dead_cards[0] == '' or dead_cards[1] == '':
+            pairs[first+second]=1
+            continue
+        if dead_cards[0][0] == dead_cards[1][0]:
+
+            '''
+            A=B=a=b
+            '''
+            if first[0] == dead_cards[0][0] and second[0] == dead_cards[0][0]:
+                pairs[first+second]=1.0/6
+                '''
+                A==a,B!=a
+                A!=a,B==a
+                '''
+            elif first[0] == dead_cards[0][0] and second[0] != dead_cards[0][0] :
+                pairs[first+second]=3.0/4
+            elif first[0] != dead_cards[0][0] and second[0] == dead_cards[0][0] :
+                pairs[first+second]=3.0/4
+            else:
+                pairs[first+second]=1
+
+        if dead_cards[0][0] != dead_cards[1][0]:
+            '''
+            A=B=a or A=B=b
+            '''
+            if (first[0]==second[0]==dead_cards[0][0]) or (first[0]==second[0]==dead_cards[1][0]) :
+                pairs[first+second]=1.0/2
+
+                '''
+                (A==a, A!=b, B!=a, B!=b)
+                (A==b, A!=a, B!=a, B!=b)
+                '''
+            elif (first[0]==dead_cards[0][0] and second[0]!=dead_cards[0][0]) and \
+                 (first[0]!=dead_cards[1][0] and second[0]!=dead_cards[1][0]) :
+                pairs[first+second]=3.0/4
+            elif (first[0]==dead_cards[1][0] and second[0]!=dead_cards[0][0]) and \
+                 (first[0]!=dead_cards[0][0] and second[0]!=dead_cards[1][0]) :
+                pairs[first+second]=3.0/4
+                '''
+                (A!=a, A!=b, B==a, B!=b)
+                (A!=a, A!=b, B==b, B!=a)
+                '''
+
+            elif (first[0]!=dead_cards[0][0] and second[0]==dead_cards[0][0]) and \
+                 (first[0]!=dead_cards[1][0] and second[0]!=dead_cards[1][0]) :
+                pairs[first+second]=3.0/4
+            elif (first[0]!=dead_cards[0][0] and second[0]==dead_cards[1][0]) and \
+                 (first[0]!=dead_cards[1][0] and second[0]!=dead_cards[0][0]) :
+                pairs[first+second]=3.0/4
+                '''
+                (A==a, B==b)
+                (A==b, B==a)
+                '''
+            elif (first[0]==dead_cards[0][0] and second[0]==dead_cards[1][0]) or \
+                 (first[0]==dead_cards[1][0] and second[0]==dead_cards[0][0]) :
+                pairs[first+second]=9.0/16
+            else:
+                pairs[first+second]=1
+
+    # pprint(pairs)
+    # groups = {}
+    # pprint(len(rb))
+    # for pair in pairs:
+    #     for bd in rb:
+    #         groups[(pair+bd)]=rb[bd]*pairs[pair]
+    pprint(pairs)
+    return pairs
 def scope(arg):
     rank1 = ["2h","3h","4h","5h","6h","7h","8h","9h","Th","Jh","Qh","Kh","Ah"]
     rank2 = ["2d","3d","4d","5d","6d","7d","8d","9d","Td","Jd","Qd","Kd","Ad"]
@@ -261,36 +334,36 @@ def main():
     64s, 75s, 86s, 97s, T8s, J9s")
     handRanges = [hr1,hr2,hr3]
     hr = hr1
-
+    dead_cards = [sys.argv[3][:2],sys.argv[3][2:4]]
     '''
     pass the task function, followed by the parameters to processors
     '''
     rank_list = scope(sys.argv)
     if len(rank_list) == 3 and sys.argv[2][6:]=='one':
-        list_groups = list_group_card_flop1(handRanges,rank_list)
+        list_groups = list_group_card_flop1(handRanges,rank_list,dead_cards)
     if len(rank_list) == 3 and sys.argv[2][6:]=='two':
-        list_groups = list_group_card_flop2(handRanges,rank_list)
+        list_groups = list_group_card_flop2(handRanges,rank_list,dead_cards)
     if len(rank_list) == 3 and sys.argv[2][6:]=='three':
-        list_groups = list_group_card_flop3(handRanges,rank_list)
+        list_groups = list_group_card_flop3(handRanges,rank_list,dead_cards)
 
 
     if len(rank_list)==8 and sys.argv[2][6:]=='one':
-        list_groups = list_group_card_turn1(handRanges,rank_list)
+        list_groups = list_group_card_turn1(handRanges,rank_list,dead_cards)
     if len(rank_list)==8 and sys.argv[2][6:]=='two':
-        list_groups = list_group_card_turn2(handRanges,rank_list)
+        list_groups = list_group_card_turn2(handRanges,rank_list,dead_cards)
     if len(rank_list)==8 and sys.argv[2][6:]=='three':
-        list_groups = list_group_card_turn3(handRanges,rank_list)
+        list_groups = list_group_card_turn3(handRanges,rank_list,dead_cards)
     if len(rank_list)==8 and sys.argv[2][6:]=='four':
-        list_groups = list_group_card_turn4(handRanges,rank_list)
+        list_groups = list_group_card_turn4(handRanges,rank_list,dead_cards)
 
     if len(rank_list)==10 and sys.argv[2][6:] == 'one':
-        list_groups = list_group_card_river1(handRanges,rank_list)
+        list_groups = list_group_card_river1(handRanges,rank_list,dead_cards)
     if len(rank_list)==10 and (sys.argv[2][6:] == 'two') :
-        list_groups = list_group_card_river2(handRanges,rank_list)
+        list_groups = list_group_card_river2(handRanges,rank_list,dead_cards)
     if len(rank_list)==10 and (sys.argv[2][6:] == 'three') :
-        list_groups = list_group_card_river3(handRanges,rank_list)
+        list_groups = list_group_card_river3(handRanges,rank_list,dead_cards)
     if len(rank_list)==10 and (sys.argv[2][6:] == 'four') :
-        list_groups = list_group_card_river4(handRanges,rank_list)
+        list_groups = list_group_card_river4(handRanges,rank_list,dead_cards)
 
     for groups in list_groups:
 

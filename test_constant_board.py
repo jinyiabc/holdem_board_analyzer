@@ -32,6 +32,7 @@ for i in range(len(hr)):
 for pair in pairs:
     me = pair['me']
     op = pair['op']
+    # op = ['__','__']
     test = []
     test.extend(me)
     test.extend(op)
@@ -76,27 +77,27 @@ print("scoop: %s" % scoop)
 # hr1 = eval7.HandRange("TT+, AQ+, KQ+")  # 78 combo
 # pprint(len(hr1.hands))
 
-def colorShape(r1,r2,r3,r4,n,m):
-    '''
-    n equals number of board cards.
-    m equals the number of colors displayed in board.
-    r1,r2,r3,r4 represents rank1,rank2,rank3,rank4
-    '''
-    board=[[0,0] for i in range(n)]
-
-
-rb={} 
-for idx1,b1 in enumerate(rank1):  #949,104
-    for idx2, b2 in enumerate(rank1):
-        for idx3, b3 in enumerate(rank2):
-            for idx4, b4 in enumerate(rank2):
-                for idx5, b5 in enumerate(rank3):
-                    if idx1==idx3<idx2<idx4<idx5:  # 715 orderShape = 2+2+1  (C2,5*C2,3/2 - 1*C2,3)*colorShape(6)*C3,4
-                        # pass
-                        rb[(b1+b3+b2+b4+b5)]=384
-
-pprint(rb)
-print(len(rb))
+# def colorShape(r1,r2,r3,r4,n,m):
+#     '''
+#     n equals number of board cards.
+#     m equals the number of colors displayed in board.
+#     r1,r2,r3,r4 represents rank1,rank2,rank3,rank4
+#     '''
+#     board=[[0,0] for i in range(n)]
+#
+#
+# rb={}
+# for idx1,b1 in enumerate(rank1):  #949,104
+#     for idx2, b2 in enumerate(rank1):
+#         for idx3, b3 in enumerate(rank2):
+#             for idx4, b4 in enumerate(rank2):
+#                 for idx5, b5 in enumerate(rank3):
+#                     if idx1==idx3<idx2<idx4<idx5:  # 715 orderShape = 2+2+1  (C2,5*C2,3/2 - 1*C2,3)*colorShape(6)*C3,4
+#                         # pass
+#                         rb[(b1+b3+b2+b4+b5)]=384
+#
+# pprint(rb)
+# print(len(rb))
 
 
 
