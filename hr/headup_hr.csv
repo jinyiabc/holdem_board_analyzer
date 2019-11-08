@@ -1,16 +1,0 @@
-r=2 R2C
-77o 88o 99o TTo ATo JJo AJo QQo AQo AKo ATs AJs AQs AKs AAo KKo
-r=2 R1C
-22o A2o 33o K3o A3o 44o Q4o K4o A4o 55o J5o Q5o K5o A5o 66o T6o J6o Q6o K6o A6o 76s 87o 97o T7o J7o Q7o K7o A7o 86s 87s 98o T8o J8o Q8o K8o A8o 95s 96s 97s 98s T9o J9o Q9o K9o A9o T4s T5s T6s T7s T8s T9s JTo QTo KTo J2s J3s J4s J5s J6s J7s J8s J9s JTs QJo KJo Q2s Q3s Q4s Q5s Q6s Q7s Q8s Q9s QTs QJs KQo K2s K3s K4s K5s K6s K7s K8s K9s KTs KJs A2s A3s A4s A5s A6s A7s A8s KQs A9s
-r=2 CR0C
-J2o Q2o K2o J3o Q3o J4o 54s 64s 65s 76o 86o 96o 74s 75s 84s 85s 93s 94s T2s T3s
-r=1.5 R2C
-88o 99o TTo JJo AJo QQo AKo ATs AJs AQs AKs AAo Aqo KKo 77o
-r=1.5 R1C
-A2o 33o A3o 44o K4o A4o 55o J5o Q5o K5o A5o 66o T6o J6o Q6o K6o A6o 97o T7o J7o Q7o K7o A7o 87s 98o T8o J8o Q8o K8o A8o 95s 96s 97s 98s T9o J9o Q9o K9o A9o T4s T5s T6s T7s T8s T9s JTo QTo KTo J2s J3s J4s J5s J6s J7s J8s J9s JTs QJo KJo Q2s Q3s Q4s Q5s Q6s Q7s Q8s Q9s QTs QJs K2s K3s K4s K5s K6s K7s K8s K9s KTs KJs A2s A3s A4s A5s A6s A7s A8s A9s ATo KQo KQs
-r=1.5 CR0C
-22o T2o J2o Q2o K2o T3o J3o Q3o K3o 43s T4o J4o 53s 54s 65o 75o 85o 95o T5o 63s 64s 65s 76o 86o 96o 73s 74s 75s 76s 87o 82s 83s 84s 85s 86s 92s 93s 94s T2s T3sr=0.5 R2C 77o 88o 99o TTo JJo AJo QQo ATs AJs AQs AKs KKo AKo AAo                                                                                                                                  
-r=0.5 R1C
-A2o 33o A3o 44o K4o A4o 55o Q5o K5o A5o 66o Q6o K6o A6o 97o T7o J7o Q7o K7o A7o 87s 98o T8o J8o Q8o K8o A8o 96s 97s 98s T9o J9o Q9o K9o A9o T4s T5s T6s T7s T8s T9s JTo QTo J3s J4s J5s J6s J7s J8s J9s JTs QJo Q2s Q3s Q4s Q5s Q6s Q7s Q8s Q9s QTs QJs K2s K3s K4s K5s K6s K7s K8s K9s A2s A3s A4s A5s A6s A7s A8s KTo
-r=0.5 CR0C 
-22o 32o 42o 52o 62o 72o 82o 92o T2o J2o Q2o K2o 32s 43o 53o 63o 73o 83o 93o T3o J3o Q3o K3o 42s 43s 54o 64o 74o 84o 94o T4o J4o Q4o 52s 53s 54s 65o 75o 85o 95o T5o J5o 62s 63s 64s 65s 76o 86o 96o T6o J6o 72s 73s 74s 75s 76s 87o 82s 83s 84s 85s 86s 92s 93s 94s 95s T2s T3s J2s
