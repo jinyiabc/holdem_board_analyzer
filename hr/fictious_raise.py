@@ -54,17 +54,21 @@ def good_hand(hand):
 
 hand0=hand_init()
 list_hands = good_hand(hand0)
-rounds=10
-# print(len(list_hands))
+rounds=20
+R1C=3  # Bet structure: Assume raise followed by call.
+n = 2  # number of players except one.
+iteration=100 # for each hand range eg. 89O
+
+
 for round in tqdm(range(rounds)):
     for index in range(len(list_hands)):
     # hand['32o']=-100
         hr = eval7.HandRange(list_hands[index])
         good_hand1 = good_hand(hand0)
-        number = 100*len(hr.hands)
+        number = iteration*len(hr.hands)
         sum=0
         # print(len(good_hand1))
-        for iteration in range(number):
+        for i in range(number):
             # good_hand1 = good_hand(hand0)
             # pprint(good_hand1)
 
@@ -89,36 +93,24 @@ for round in tqdm(range(rounds)):
             hands = [str(i) for i in dealt_cards]
 
             hand1=[str(remove_card1),str(remove_card2)]
-            r1=[hands[0],hands[1]]
-            n = 7
-            player=['','','','','','','']
+            # r1=[hands[0],hands[1]]
+            '''
+            For simplicity: Assume BB share good hand with other player.
+            '''
+            # n = 8
+            bb_play = False
+            player=['','','','','','','','']
             for i in range(n):
-                list1 = [hands[2+2*i],hands[3+2*i]]
+                list1 = [hands[2*i],hands[1+2*i]]
                 hand = listToStringHand(list1)
-                # card1=eval7.Card(hands[2+2*i])
-                # card2=eval7.Card(hands[3+2*i])
-                # if card1.rank < card2.rank:
-                #     temp=card1
-                #     card1=card2
-                #     card2=temp
-                # if card1.suit != card2.suit:
-                #     if card1.rank != card2.rank:
-                #         hand = str(card1)[0]+str(card2)[0]+'o'
-                #     else:
-                #         hand = str(card1)[0]+str(card2)[0]
-                # else:
-                #     hand = str(card1)[0]+str(card2)[0]+'s'
-
-
                 if hand in good_hand1:
-                    player[i] = [hands[2+2*i],hands[3+2*i]]
-                # if hand not in good_hand1:
-                #     print(hand)
-                #     print(good_hand1)
+                    player[i] = [hands[2*i],hands[1+2*i]]
+                    if i==0:
+                        bb_play = True
 
             participation = [i for i in player if i!='']
-            pockets = [hand1, r1] + participation
-            board = [hands[2*n+2],hands[2*n+3],hands[2*n+4],hands[2*n+5],hands[2*n+6]]
+            pockets = [hand1] + participation
+            board = [hands[2*n],hands[2*n+1],hands[2*n+2],hands[2*n+3],hands[2*n+4]]
             # pprint(hand1)
             # pprint(hands)
             # pprint(pockets)
@@ -128,8 +120,12 @@ for round in tqdm(range(rounds)):
             result = pokereval.poker_eval(game='holdem', pockets=pockets, board=board)
             # pprint(result['eval'])
             m = len(participation)
-            pot = m + 2
+            if bb_play:
+                pot = R1C*(m + 1)
+            else:
+                pot = R1C*(m + 1) + 1   # 1BB from bb as dead money.
             winners = [i for i in result['eval'] if int(i['ev'])>0]
+
             # for index, value in enumerate(result['eval']):
             #     if value['ev']>0:
             #         # print(pockets[index], "wins", pot*1.0/len(winners))
@@ -146,11 +142,13 @@ for round in tqdm(range(rounds)):
             if  result['eval'][0]['ev']>0:
                 sum = sum + pot*1.0/len(winners)
             else:
-                sum = sum - 1
+                sum = sum - 1*R1C
+
         if sum>0:
             hand0[list_hands[index]]+=sum*1.0/number
         else:
             hand0[list_hands[index]]+=sum*1.0/number
+
         # print(list_hands[index],"=",hand0[list_hands[index]])
         # print(list_hands[index])
     # pprint(hand0)
@@ -162,7 +160,7 @@ pprint(rank_hand0)
 pprint(len(good_hand(hand0)))
 
 t1 = datetime.datetime.now()
-f=open("guru_fictious_"+str(n+2)+"__"+str(rounds)+"__"+repr(t1.isoformat()[:10])+".txt","a+")
+f=open("guru_1fictious_"+"palyers="+str(n+1)+"_"+"betStruct="+str(R1C)+"_"+"rounds="+str(rounds)+"_"+repr(t1.isoformat()[:10])+".txt","a+")
 for i in range(len(rank_hand0)):
     f.write("%.4s, %s\n" % (str(rank_hand0[i][0]), str(rank_hand0[i][1])))
 f.close()
