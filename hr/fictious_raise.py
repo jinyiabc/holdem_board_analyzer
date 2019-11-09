@@ -51,12 +51,42 @@ def good_hand(hand):
     new_hand = [i for i in hand if hand[i]>=0]
     return new_hand
 
+def good_hand_new():
+    with open("guru_1fictious_palyers=9_betStruct=1_rounds=20_'2019-11-08'.txt", "r") as ins:
+        pos=[]
+        for line in ins:
+            pos.append(line.split(','))
+    cardStringList1 = [i[0] for i in pos ]
+    hand = percentile(cardStringList1,30)
+    return hand
 
+def percentile(cardStringList, n):
+    hr=[]
+    for i in range(len(cardStringList)):
+        hr += eval7.HandRange(cardStringList[i]).hands
+
+    i=len(hr)
+    index=np.percentile(np.arange(i), n, interpolation='nearest')
+    # print hr[index]
+    # print( str(hr[index][0][0]) )
+    if str(hr[index][0][0])[1] != str(hr[index][0][1])[1]:
+        if str(hr[index][0][0])[0]!= str(hr[index][0][1])[0]:
+            hand = str(hr[index][0][0])[0]+str(hr[index][0][1])[0] +'o'
+        else:
+            hand = str(hr[index][0][0])[0]+str(hr[index][0][1])[0]
+    else:
+        hand = str(hr[index][0][0])[0]+str(hr[index][0][1])[0] +'s'
+    # print(hand)
+    new_list=cardStringList[:(cardStringList.index(hand)+1)]
+    # print(new_list)
+    return new_list
+
+########################################################
 hand0=hand_init()
 list_hands = good_hand(hand0)
-rounds=20
+rounds=1
 R1C=3  # Bet structure: Assume raise followed by call.
-n = 2  # number of players except one.
+n = 8  # number of players except one.
 iteration=100 # for each hand range eg. 89O
 
 
@@ -64,7 +94,7 @@ for round in tqdm(range(rounds)):
     for index in range(len(list_hands)):
     # hand['32o']=-100
         hr = eval7.HandRange(list_hands[index])
-        good_hand1 = good_hand(hand0)
+        good_hand1 = good_hand_new() #good_hand(hand0)
         number = iteration*len(hr.hands)
         sum=0
         # print(len(good_hand1))
@@ -167,9 +197,7 @@ f.close()
 
 
 
-        # print(len(winners))
-        # if(len(winners)>1):
-        #     pprint(winners)
+
 
 
 
