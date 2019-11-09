@@ -38,19 +38,23 @@ def percentile(cardStringList, n):
 
 
 
+
 cardStringList1 = [i[0] for i in pos ]
 cardStringList2 = [i[0] for i in pos1 ]
 
+perc50 = percentile(cardStringList1, 5)
+test = [i if i[0]  not in perc50 else [i[0], 20]  for i in pos]
+pprint(test)
 
-for pert in [5,10,25,35,45,55,65,75,85,95]:
-    print("Diffrence for # %d of hands" % pert)
-    card_diff10 = Diff(percentile(cardStringList1,pert), percentile(cardStringList2,pert))
-    print(card_diff10)
-
-    card_diff10_re = Diff(percentile(cardStringList2,pert), percentile(cardStringList1,pert))
-    print(card_diff10_re)
-
-percentile(cardStringList, 50)
-percentile(cardStringList, 10)       # ['AA', 'KK', 'QQ', 'JJ', 'AKs', 'AQs', 'TT', 'AKo', 'AJs', 'KQs', 'ATs', 'AQo', '99', 'KJs', 'KTs', 'QJs', 'KQo', 'AJo', 'A9s', 'QTs', '88', 'A8s']
-print(percentile(cardStringList2, 13))       #['AA', 'KK', 'QQ']
-percentile(cardStringList, 0.1)    # ['AA']
+# for pert in [5,10,25,35,45,55,65,75,85,95]:
+#     print("Diffrence for # %d of hands" % pert)
+#     card_diff10 = Diff(percentile(cardStringList1,pert), percentile(cardStringList2,pert))
+#     print(card_diff10)
+#
+#     card_diff10_re = Diff(percentile(cardStringList2,pert), percentile(cardStringList1,pert))
+#     print(card_diff10_re)
+#
+# print(percentile(cardStringList1, 5))
+# percentile(cardStringList, 10)       # ['AA', 'KK', 'QQ', 'JJ', 'AKs', 'AQs', 'TT', 'AKo', 'AJs', 'KQs', 'ATs', 'AQo', '99', 'KJs', 'KTs', 'QJs', 'KQo', 'AJo', 'A9s', 'QTs', '88', 'A8s']
+# print(percentile(cardStringList2, 13))       #['AA', 'KK', 'QQ']
+# percentile(cardStringList, 0.1)    # ['AA']
