@@ -84,9 +84,9 @@ def percentile(cardStringList, n):
 ########################################################
 hand0=hand_init()
 list_hands = good_hand(hand0)
-rounds=1
+rounds=20
 R1C=3  # Bet structure: Assume raise followed by call.
-n = 8  # number of players except one.
+n = 5  # number of players except one.
 iteration=100 # for each hand range eg. 89O
 
 
