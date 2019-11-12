@@ -6,6 +6,7 @@ import pandas as pd
 import re
 import seaborn as sns
 from statistics import mean
+import sys
 
 sns.set()
 
@@ -13,7 +14,7 @@ sns.set()
 #     pos=[]
 #     for line in ins:
 #         pos.append(line.split(','))
-data = "guru_1fictious_palyers=9_betStruct=3_rounds=20_'2019-11-08'.txt"
+data = "./log/guru_proceed_palyers=9_betStruct=1_rounds=100_'2019-11-12T20:30:51'.txt"
 data1 = "guru_1fictious_palyers=6_betStruct=3_rounds=20_'2019-11-10'.txt"
 data2 = "guru_1fictious_palyers=3_betStruct=3_rounds=20_'2019-11-08'.txt"
 
@@ -81,10 +82,22 @@ def loadData_group(data, top):
         category = [0,20,5,5,5,5,5,5,5,5,5,5,30] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
     if top == 30:
         category = [0,30,5,5,5,5,5,5,5,5,30] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
+    if top == 35:
+        category = [0,35,5,5,5,5,5,5,5,30] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
     if top == 40:
         category = [0,40,5,5,5,5,5,5,30] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
+    if top == 45:
+        category = [0,45,5,5,5,5,5,30] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
+    if top == 50:
+        category = [0,50,5,5,5,5,30] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
+    if top == 55:
+        category = [0,55,5,5,5,30] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
+    if top == 60:
+        category = [0,60,5,5,30] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
     if top == 65:
         category = [0,65,5,5,5,5,5,5,5] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
+    if top == 70:
+        category = [0,70,5,5,5,5,5,5] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
 
     # category = [0,30,5,5,5,5,5,5,5,5,30] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
     # category = [0,15,5,5,5,5,5,5,5,5,5,5,5,30] # Increments for each group # 0.1%, 5.1%, 10.1%, 15.1% ...
@@ -171,17 +184,34 @@ compare two hand rankings
 #     print(card_diff10_re)
 
 
-pivot_data91 = loadData_group(data, 30)
-pivot_data92 = loadData_group(data, 15)
-pivot_data93 = loadData_group(data, 10)
+pivot_data91 = [loadData_group(data, 5),
+                loadData_group(data, 10),
+                loadData_group(data, 15)]
+                # loadData_group(data, 20),
+                # loadData_group(data, 25),
+                # loadData_group(data, 30),
+                # loadData_group(data, 35),
+                # loadData_group(data, 40),
+                # loadData_group(data, 45),
+                # loadData_group(data, 50),
+                # loadData_group(data, 55),
+                # loadData_group(data, 60),
+                # loadData_group(data, 65),
+                # loadData_group(data, 70)]
 
-pivot_data61 = loadData_group(data1, 40)
-pivot_data62 = loadData_group(data1, 25)
-pivot_data63 = loadData_group(data1, 15)
 
-pivot_data31 = loadData_group(data2, 65)
-pivot_data32 = loadData_group(data2, 40)
-pivot_data33 = loadData_group(data2, 30)
+
+
+# pivot_data92 = loadData_group(data, 15)
+# pivot_data93 = loadData_group(data, 10)
+
+# pivot_data61 = loadData_group(data1, 40)
+# pivot_data62 = loadData_group(data1, 25)
+# pivot_data63 = loadData_group(data1, 15)
+#
+# pivot_data31 = loadData_group(data2, 65)
+# pivot_data32 = loadData_group(data2, 40)
+# pivot_data33 = loadData_group(data2, 30)
 
 labels =  np.array([['AA','AK','AQ','AJ','AT','A9','A8','A7','A6','A5','A4','A3','A2'],
                     ['AK','KK','KQ','KJ','KT','K9','K8','K7','K6','K5','K4','K3','K2'],
@@ -198,105 +228,110 @@ labels =  np.array([['AA','AK','AQ','AJ','AT','A9','A8','A7','A6','A5','A4','A3'
                     ['A2','K2','Q2','J2','T2','92','82','72','62','52','42','32','22']
                     ])
 
-#http://alanpryorjr.com/visualizations/seaborn/heatmap/heatmap/
+for i in range(len(pivot_data91)):
+    #http://alanpryorjr.com/visualizations/seaborn/heatmap/heatmap/
+    f, ax = plt.subplots(figsize=(9, 6))
+    p = sns.heatmap(   pivot_data91[i],
+                       #annot=True ,
+                       cmap='cool',
+                       fmt="",
+                       annot = labels,
+                       annot_kws={'size':10},
+                       square=True,
+                       linewidths=.5,
+                       robust=True,
+                       ax=ax)
 
-# f, ax = plt.subplots(figsize=(9, 6))
-# p = sns.heatmap(   table,
-#                    #annot=True ,
-#                    cmap='coolwarm',
-#                    fmt="",
-#                    annot = labels,
-#                    annot_kws={'size':10},
-#                    square=True,
-#                    linewidths=.5,
-#                    robust=True,
-#                    ax=ax)
+    # plt.text(5,12.3,"Title", fontsize = 95, color='Black', fontstyle='italic')
+    plt.ylabel('')
+    plt.xlabel('')
+    plt.title("Top"+str(5+i))
+    ax.set_xticks([])
+    ax.set_yticks([])
+    # plt.show()
+    ax.get_figure().savefig('EV+9'+str(i)+'.png')
+
+
+# import matplotlib.pylab as pylab
+# params = {'legend.fontsize': 'x-large',
+#           'figure.figsize': (15, 5),
+#          'axes.labelsize': '17',
+#          'axes.titlesize':'x-large',
+#          # 'xtick.labelsize':'x-large',
+#          # 'ytick.labelsize':'x-large'
+#          }
+# pylab.rcParams.update(params)
 #
-# # plt.text(5,12.3,"Title", fontsize = 95, color='Black', fontstyle='italic')
-# plt.title('Scores by group and gender')
+# fig, axes = plt.subplots(nrows = 3, ncols = 3, figsize = (25,25));
+#
+# sns.heatmap(pivot_data91, annot=labels, fmt="", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[0,0], cbar = False);
+# axes[0,0].set_title('player 9 and Round 1(Top 30%)', fontsize=12)
+# axes[0,0].set_xlabel('')
+# axes[0,0].set_ylabel('')
+# axes[0,0].set_xticks([])
+# axes[0,0].set_yticks([])
+#
+# sns.heatmap(pivot_data92, annot=labels, fmt="", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[0,1], cbar = False);
+# axes[0,1].set_title('player 9 and Round 2(Top 15%)', fontsize=12)
+# axes[0,1].set_xlabel('')
+# axes[0,1].set_ylabel('')
+# axes[0,1].set_xticks([])
+# axes[0,1].set_yticks([])
+#
+#
+# sns.heatmap(pivot_data93, annot=labels, fmt="", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[0,2], cbar = False);
+# axes[0,2].set_title('player 9 and Round 3(Top 10%)', fontsize=12)
+# axes[0,2].set_xlabel('')
+# axes[0,2].set_ylabel('')
+# axes[0,2].set_xticks([])
+# axes[0,2].set_yticks([])
+#
+# sns.heatmap(pivot_data61, annot=labels, fmt="", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[1,0], cbar = False);
+# axes[1,0].set_title('player 6 and Round 1(Top 40%)', fontsize=12)
+# axes[1,0].set_xlabel('')
+# axes[1,0].set_ylabel('')
+# axes[1,0].set_xticks([])
+# axes[1,0].set_yticks([])
+#
+# sns.heatmap(pivot_data62, annot=labels, fmt="", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[1,1], cbar = False);
+# axes[1,1].set_title('player 6 and Round 2(Top 25%)', fontsize=12)
+# axes[1,1].set_xlabel('')
+# axes[1,1].set_ylabel('')
+# axes[1,1].set_xticks([])
+# axes[1,1].set_yticks([])
+#
+# sns.heatmap(pivot_data63, annot=labels, fmt="", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[1,2], cbar = False);
+# axes[1,2].set_title('player 6 and Round 3(Top 15%)', fontsize=12)
+# axes[1,2].set_xlabel('')
+# axes[1,2].set_ylabel('')
+# axes[1,2].set_xticks([])
+# axes[1,2].set_yticks([])
+#
+# sns.heatmap(pivot_data31, annot=labels, fmt="", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[2,0], cbar = False);
+# axes[2,0].set_title('player 3 and Round 1(Top 65%)', fontsize=12)
+# axes[2,0].set_xlabel('')
+# axes[2,0].set_ylabel('')
+# axes[2,0].set_xticks([])
+# axes[2,0].set_yticks([])
+#
+# sns.heatmap(pivot_data32, annot=labels, fmt="", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[2,1], cbar = False);
+# axes[2,1].set_title('player 3 and Round 2(Top 40%)', fontsize=12)
+# axes[2,1].set_xlabel('')
+# axes[2,1].set_ylabel('')
+# axes[2,1].set_xticks([])
+# axes[2,1].set_yticks([])
+#
+# sns.heatmap(pivot_data33, annot=labels, fmt="", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[2,2], cbar = False);
+# axes[2,2].set_title('player 3 and Round 3(Top 30%)', fontsize=12)
+# axes[2,2].set_xlabel('')
+# axes[2,2].set_ylabel('')
+# axes[2,2].set_xticks([])
+# axes[2,2].set_yticks([])
+#
 # plt.show()
-# p.get_figure().savefig('heatmap.png')
-
-import matplotlib.pylab as pylab
-params = {'legend.fontsize': 'x-large',
-          'figure.figsize': (15, 5),
-         'axes.labelsize': '17',
-         'axes.titlesize':'x-large',
-         # 'xtick.labelsize':'x-large',
-         # 'ytick.labelsize':'x-large'
-         }
-pylab.rcParams.update(params)
-
-fig, axes = plt.subplots(nrows = 3, ncols = 3, figsize = (8,8));
-
-sns.heatmap(pivot_data91, annot=True, fmt=".1f", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[0,0], cbar = False);
-axes[0,0].set_title('player 9 and Round 1(Top 30%)', fontsize=12)
-axes[0,0].set_xlabel('')
-axes[0,0].set_ylabel('')
-axes[0,0].set_xticks([])
-axes[0,0].set_yticks([])
-
-sns.heatmap(pivot_data92, annot=True, fmt=".1f", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[0,1], cbar = False);
-axes[0,1].set_title('player 9 and Round 2(Top 15%)', fontsize=12)
-axes[0,1].set_xlabel('')
-axes[0,1].set_ylabel('')
-axes[0,1].set_xticks([])
-axes[0,1].set_yticks([])
-
-
-sns.heatmap(pivot_data93, annot=True, fmt=".1f", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[0,2], cbar = False);
-axes[0,2].set_title('player 9 and Round 3(Top 10%)', fontsize=12)
-axes[0,2].set_xlabel('')
-axes[0,2].set_ylabel('')
-axes[0,2].set_xticks([])
-axes[0,2].set_yticks([])
-
-sns.heatmap(pivot_data61, annot=True, fmt=".1f", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[1,0], cbar = False);
-axes[1,0].set_title('player 6 and Round 1(Top 40%)', fontsize=12)
-axes[1,0].set_xlabel('')
-axes[1,0].set_ylabel('')
-axes[1,0].set_xticks([])
-axes[1,0].set_yticks([])
-
-sns.heatmap(pivot_data62, annot=True, fmt=".1f", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[1,1], cbar = False);
-axes[1,1].set_title('player 6 and Round 2(Top 25%)', fontsize=12)
-axes[1,1].set_xlabel('')
-axes[1,1].set_ylabel('')
-axes[1,1].set_xticks([])
-axes[1,1].set_yticks([])
-
-sns.heatmap(pivot_data63, annot=True, fmt=".1f", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[1,2], cbar = False);
-axes[1,2].set_title('player 6 and Round 3(Top 15%)', fontsize=12)
-axes[1,2].set_xlabel('')
-axes[1,2].set_ylabel('')
-axes[1,2].set_xticks([])
-axes[1,2].set_yticks([])
-
-sns.heatmap(pivot_data31, annot=True, fmt=".1f", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[2,0], cbar = False);
-axes[2,0].set_title('player 3 and Round 1(Top 65%)', fontsize=12)
-axes[2,0].set_xlabel('')
-axes[2,0].set_ylabel('')
-axes[2,0].set_xticks([])
-axes[2,0].set_yticks([])
-
-sns.heatmap(pivot_data32, annot=True, fmt=".1f", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[2,1], cbar = False);
-axes[2,1].set_title('player 3 and Round 2(Top 40%)', fontsize=12)
-axes[2,1].set_xlabel('')
-axes[2,1].set_ylabel('')
-axes[2,1].set_xticks([])
-axes[2,1].set_yticks([])
-
-sns.heatmap(pivot_data33, annot=True, fmt=".1f", linewidths=.5, square = True, robust=True,cmap='cool', ax = axes[2,2], cbar = False);
-axes[2,2].set_title('player 3 and Round 3(Top 30%)', fontsize=12)
-axes[2,2].set_xlabel('')
-axes[2,2].set_ylabel('')
-axes[2,2].set_xticks([])
-axes[2,2].set_yticks([])
-
-plt.show()
 
 # plt.savefig('preflop_9')
-# fig.get_figure().savefig('heatmap1.png')
+# p.get_figure().savefig('heatmap.png')
 
 # print(percentile(cardStringList1, 5))
 # percentile(cardStringList, 10)       # ['AA', 'KK', 'QQ', 'JJ', 'AKs', 'AQs', 'TT', 'AKo', 'AJs', 'KQs', 'ATs', 'AQo', '99', 'KJs', 'KTs', 'QJs', 'KQo', 'AJo', 'A9s', 'QTs', '88', 'A8s']

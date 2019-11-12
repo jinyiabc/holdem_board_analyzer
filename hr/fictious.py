@@ -144,7 +144,7 @@ for round in tqdm(range(rounds)):
             # pprint(len(good_hand(hand0)))
 
             if  result['eval'][0]['ev']>0:
-                sum = sum + pot*1.0/len(winners)
+                sum = sum + pot*1.0/len(winners)-1
             else:
                 sum = sum - 1
         if sum>0:

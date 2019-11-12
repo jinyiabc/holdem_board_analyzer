@@ -48,38 +48,38 @@ labels =  np.array([['AA','AK','AQ','AJ','AT','A9','A8','A7','A6','A5','A4','A3'
                     ['A2','K2','Q2','J2','T2','92','82','72','62','52','42','32','22']
                     ])
 
-import matplotlib.pylab as pylab
-params = {'legend.fontsize': 'x-large',
-          'figure.figsize': (15, 5),
-         'axes.labelsize': '17',
-         'axes.titlesize':'x-large',
-         # 'xtick.labelsize':'x-large',
-         # 'ytick.labelsize':'x-large'
-         }
-pylab.rcParams.update(params)
-
-fig, axes = plt.subplots(nrows = 2, ncols = 3, figsize = (25,25));
-
-sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[0,0], cbar = False);
-
-sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[0,1], cbar = False);
-
-sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[0,2], cbar = False);
-
-sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[1,0], cbar = False);
-
-sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[1,1], cbar = False);
-
-sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[1,2], cbar = False);
-
-# fig, ax = plt.subplots()
-# ax = sns.heatmap(data,
-#                  xticklabels = False,
-#                  annot = labels, fmt = '')
+# import matplotlib.pylab as pylab
+# params = {'legend.fontsize': 'x-large',
+#           'figure.figsize': (15, 5),
+#          'axes.labelsize': '17',
+#          'axes.titlesize':'x-large',
+#          # 'xtick.labelsize':'x-large',
+#          # 'ytick.labelsize':'x-large'
+#          }
+# pylab.rcParams.update(params)
 #
-# plt.ylabel('')
-# plt.xlabel('')
-# plt.title('Scores by group and gender')
+# fig, axes = plt.subplots(nrows = 2, ncols = 3, figsize = (25,25));
 #
+# sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[0,0], cbar = False);
+#
+# sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[0,1], cbar = False);
+#
+# sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[0,2], cbar = False);
+#
+# sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[1,0], cbar = False);
+#
+# sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[1,1], cbar = False);
+#
+# sns.heatmap(data, annot=labels, fmt="", linewidths=.5, square = True, cmap = 'Blues_r', ax = axes[1,2], cbar = False);
+
+fig, ax = plt.subplots()
+ax = sns.heatmap(data,
+                 xticklabels = False,
+                 annot = labels, fmt = '')
+
+plt.ylabel('')
+plt.xlabel('')
+plt.title('Scores by group and gender')
+
 plt.show()
-# ax.get_figure().savefig('heatmap.png')
+ax.get_figure().savefig('heatmap.png')

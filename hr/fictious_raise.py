@@ -12,21 +12,23 @@ import numpy as np
 import operator
 from tqdm import tqdm
 import datetime
+import re
+
 
 rank = ['A','K','Q','J','T','9','8','7','6','5','4','3','2']
 
-def hand_init():
+def hand_init(init):
     init_hand = {}
     for idx1,i in enumerate(rank):
         for idx2,j in enumerate(rank):
             if idx1==idx2:
                 hand0 = rank[idx1] + rank[idx2]
-                init_hand[hand0]=0
+                init_hand[hand0]=init
             if idx1<idx2:
                 hand1 = rank[idx1] + rank[idx2] + 'o'
-                init_hand[hand1]=0
+                init_hand[hand1]=init
                 hand2 = rank[idx1] + rank[idx2] + 's'
-                init_hand[hand2]=0
+                init_hand[hand2]=init
     # print(len(init_hand))
     # pprint(init_hand)
     return init_hand
@@ -47,18 +49,28 @@ def listToStringHand(cardList):
         hand = str(card1)[0]+str(card2)[0]+'s'
     return hand
 
-def good_hand(hand):
-    new_hand = [i for i in hand if hand[i]>=0]
+def good_hand(hand, benchmark):
+    new_hand = [i for i in hand if hand[i]>=benchmark]
     return new_hand
 
-def good_hand_new():
-    with open("guru_1fictious_palyers=9_betStruct=1_rounds=20_'2019-11-08'.txt", "r") as ins:
+def handlist(hand):
+    new_hand = [i for i in hand]
+    return new_hand
+
+def hand_proceed(file):
+    with open(file, "r") as ins:
         pos=[]
         for line in ins:
             pos.append(line.split(','))
-    cardStringList1 = [i[0] for i in pos ]
-    hand = percentile(cardStringList1,30)
+    # cardStringList1 = [i[0] for i in pos ]
+    # hand = [i[0] for i in pos if float(re.sub('\s','',i[1]))>0]
+    # hand = percentile(cardStringList1,30)
+    hand = {}
+    for i in pos:
+        hand[i[0]] = float(re.sub('\s','',i[1]))
+
     return hand
+
 
 def percentile(cardStringList, n):
     hr=[]
@@ -82,23 +94,38 @@ def percentile(cardStringList, n):
     return new_list
 
 ########################################################
-hand0=hand_init()
-list_hands = good_hand(hand0)
-rounds=20
-R1C=3  # Bet structure: Assume raise followed by call.
-n = 5  # number of players except one.
-iteration=100 # for each hand range eg. 89O
+hand_preceed = 'proceed'
+rounds=150
+R1C=1  # Bet structure: Assume raise followed by call.
+n = 1  # number of players except hero and bb.
+iteration=200 # for each hand range eg. 89O
+noise=np.zeros((rounds, 169))
+benchmark = 3 # good hand benchmark for investigation.
+##########################################################
+
+if hand_preceed == 'proceed' :
+    hand0=hand_proceed("./log3/guru_initial_palyers=3_betStruct=1_rounds=20_'2019-11-12T23:55:36'.txt")
+    list_hands = good_hand(hand0, benchmark)     # update hands better than benchmark.
+    # list_hands = handlist(hand_init(benchmark))  # update all hands
+
+else:
+    hand0=hand_init(benchmark)
+    list_hands = handlist(hand_init(benchmark))   # update all hands
+
+# pprint(good_hand(hand0))
+# pprint(list_hands)
 
 
 for round in tqdm(range(rounds)):
+    report={}
     for index in range(len(list_hands)):
     # hand['32o']=-100
         hr = eval7.HandRange(list_hands[index])
-        good_hand1 = good_hand_new() #good_hand(hand0)
+        good_hand1 = good_hand(hand0, benchmark)
         number = iteration*len(hr.hands)
         sum=0
-        # print(len(good_hand1))
-        for i in range(number):
+        # pprint(hand0)
+        for itr in range(number):
             # good_hand1 = good_hand(hand0)
             # pprint(good_hand1)
 
@@ -123,23 +150,23 @@ for round in tqdm(range(rounds)):
             hands = [str(i) for i in dealt_cards]
 
             hand1=[str(remove_card1),str(remove_card2)]
-            # r1=[hands[0],hands[1]]
+            r1=[hands[2*n+5],hands[2*n+6]]
             '''
             For simplicity: Assume BB share good hand with other player.
             '''
             # n = 8
-            bb_play = False
-            player=['','','','','','','','']
+            # bb_play = False
+            player=['','','','','','','']
             for i in range(n):
                 list1 = [hands[2*i],hands[1+2*i]]
                 hand = listToStringHand(list1)
                 if hand in good_hand1:
                     player[i] = [hands[2*i],hands[1+2*i]]
-                    if i==0:
-                        bb_play = True
+                    # if i==0:
+                    #     bb_play = True
 
             participation = [i for i in player if i!='']
-            pockets = [hand1] + participation
+            pockets = [hand1, r1] + participation
             board = [hands[2*n],hands[2*n+1],hands[2*n+2],hands[2*n+3],hands[2*n+4]]
             # pprint(hand1)
             # pprint(hands)
@@ -150,10 +177,11 @@ for round in tqdm(range(rounds)):
             result = pokereval.poker_eval(game='holdem', pockets=pockets, board=board)
             # pprint(result['eval'])
             m = len(participation)
-            if bb_play:
-                pot = R1C*(m + 1)
-            else:
-                pot = R1C*(m + 1) + 1   # 1BB from bb as dead money.
+            pot = R1C*(m + 2)
+            # if bb_play:
+            #     pot = R1C*(m + 1)
+            # else:
+            #     pot = R1C*(m + 1) + 1   # 1BB from bb as dead money.
             winners = [i for i in result['eval'] if int(i['ev'])>0]
 
             # for index, value in enumerate(result['eval']):
@@ -170,67 +198,32 @@ for round in tqdm(range(rounds)):
             # pprint(len(good_hand(hand0)))
 
             if  result['eval'][0]['ev']>0:
-                sum = sum + pot*1.0/len(winners)
+                sum = sum + pot*1.0/len(winners) - 1*R1C
             else:
                 sum = sum - 1*R1C
-
-        if sum>0:
-            hand0[list_hands[index]]+=sum*1.0/number
-        else:
-            hand0[list_hands[index]]+=sum*1.0/number
-
+            # Add diminishing noise factor.
+            # print(np.random.uniform(-1,1)/(itr+1))
+            # hand0[list_hands[index]]+=sum + 0.1*np.random.uniform(-1,1)/(round*itr+1)
+        noise[round][index]= 0.5*np.random.uniform(-1,1)/(round+1)
+        hand0[list_hands[index]]+=sum*1.0/number  #+ noise[round][index]
+        report[list_hands[index]]= hand0[list_hands[index]] #,noise[round][index]]
         # print(list_hands[index],"=",hand0[list_hands[index]])
         # print(list_hands[index])
     # pprint(hand0)
     # pprint(good_hand(hand0))
     # pprint(len(good_hand(hand0)))
+    pprint(report)
 
-rank_hand0 = sorted(hand0.items(), key=operator.itemgetter(1), reverse=True)
+hand1={}
+for i in list_hands:
+    hand1[i] = hand0[i] #/rounds
+
+rank_hand0 = sorted(hand1.items(), key=operator.itemgetter(1), reverse=True)
 pprint(rank_hand0)
-pprint(len(good_hand(hand0)))
+pprint(len(good_hand(hand0, benchmark)))
 
 t1 = datetime.datetime.now()
-f=open("guru_1fictious_"+"palyers="+str(n+1)+"_"+"betStruct="+str(R1C)+"_"+"rounds="+str(rounds)+"_"+repr(t1.isoformat()[:10])+".txt","a+")
+f=open("./log3/guru_"+hand_preceed+"_palyers="+str(n+2)+"_"+"betStruct="+str(R1C)+"_"+"rounds="+str(rounds)+"_"+repr(t1.isoformat()[:19])+".txt","a+")
 for i in range(len(rank_hand0)):
     f.write("%.4s, %s\n" % (str(rank_hand0[i][0]), str(rank_hand0[i][1])))
 f.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# card1=eval7.Card('9s')
-# card2=eval7.Card('Ah')
-# if card1.rank < card2.rank:
-#     temp=card1
-#     card1=card2
-#     card2=temp
-#
-# hand1 = str(card1)+str(card2)
-# hr = eval7.HandRange(hand1)
-# # pprint(hr.hands[0][0][0])
-# # pprint(hr.hands[0][0][1])
-# print(hr.hands)         # [((Card("Ah"), Card("9s")), 1.0)]
-# hr_string = hr.string
-# print(hr_string)        # Ah9s
